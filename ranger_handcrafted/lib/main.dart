@@ -4,7 +4,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-main() {
+void main() {
   runApp(MyApp());
 }
 
@@ -98,8 +98,8 @@ class _MyPageState extends State<_MyPage> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var curr = currentTime;
-    var dt = curr - previous;
+    double curr = currentTime;
+    double dt = curr - previous;
     previous = curr;
 
     return Scaffold(
