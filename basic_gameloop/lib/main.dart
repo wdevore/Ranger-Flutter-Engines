@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: _MyPage(),
     );
   }
@@ -25,6 +26,7 @@ class MyGame extends CustomPainter {
   final double y;
   final double t;
 
+  /// When [animation] notifies listeners this custom painter will repaint.
   MyGame(this.world, this.x, this.y, this.t, Animation<double> animation)
       : super(repaint: animation);
 
@@ -51,7 +53,7 @@ class World {
   double _x;
   double _y;
   final Paint bgColor = Paint()..color = Colors.black54;
-  final Paint blockColor = Paint()..color = Colors.white;
+  final Paint blockColor = Paint()..color = Colors.orange;
   final double size = 200.0;
   final double tau = math.pi * 2;
   final double rotationsPerSecond = 0.55;
@@ -65,9 +67,12 @@ class World {
 
   void render(double t, Canvas canvas) {
     canvas.drawPaint(bgColor);
+
     canvas.save();
+
     canvas.translate(_x, _y);
     canvas.rotate(tau * _turn);
+
     canvas.drawRect(
       Rect.fromLTWH(
         -size / 2,
@@ -77,6 +82,7 @@ class World {
       ),
       blockColor,
     );
+
     canvas.restore();
   }
 
@@ -105,8 +111,15 @@ class _MyPageState extends State<_MyPage> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: CustomPaint(
         painter: MyGame(world, pointerx, pointery, dt, _animation),
+        child: SizedBox.expand(), // Be as big as possible
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
