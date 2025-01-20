@@ -1,5 +1,3 @@
-//Modified Example from https://www.reddit.com/r/dartlang/comments/69luui/minimal_flutter_game_loop/
-
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
