@@ -6,7 +6,7 @@ import 'scene.dart';
 import 'transform_stack.dart';
 
 class NodeException implements Exception {
-  String message;
+  final String message;
   NodeException(this.message);
 }
 
@@ -38,12 +38,14 @@ class NodeManager {
   factory NodeManager.create() {
     NodeManager nm = NodeManager();
 
+    nm.stack = NodeStack.create();
+    nm.transformStack = TransformStack.create();
+
     return nm;
   }
 
   void configure(World world) {
     var identity = Matrix4.identity();
-
     transformStack.initialize(identity);
   }
 
@@ -153,6 +155,27 @@ class NodeManager {
     return currentScene != null;
   }
 
+  /// [end] cleans up NodeManager by clearing the stack and calling all Exits
+  void end() {
+    // Dump the stack
+    print("End: Cleaning up scene stack.");
+    if (!stack.isEmpty) {
+      var pn = stack.top();
+
+      while (pn != null) {
+        exitScene(pn);
+        pn = stack.pop();
+      }
+    }
+
+    eventTargets = [];
+  }
+
+  /// Push node onto the top
+  void pushNode(Node node) {
+    stack.push(node);
+  }
+
   void setSceneState(Scene scene, SceneStates state) {
     scene.notify(state);
   }
@@ -178,11 +201,7 @@ class NodeManager {
   // Scene lifecycles
   // -----------------------------------------------------
   void enterScene(Node node) {
-    if (node is Scene) {
-      node.enterScene(this);
-    } else {
-      throw NodeException('enterScene: Current node is not a Scene.');
-    }
+    node.enterScene(this);
 
     for (var child in node.children) {
       enterNode(child);
@@ -200,11 +219,7 @@ class NodeManager {
   bool exitScene(Node node) {
     var pooled = false;
 
-    if (node is Scene) {
-      pooled = node.exitScene(this);
-    } else {
-      return false;
-    }
+    pooled = node.exitScene(this);
 
     for (var child in node.children) {
       enterNode(child);

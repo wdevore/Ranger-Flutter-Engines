@@ -1,4 +1,3 @@
-import 'node.dart';
 import 'node_manager.dart';
 
 enum SceneStates {
@@ -28,18 +27,18 @@ enum SceneStates {
   sceneFinished,
 }
 
-/// A [Scene] is just another [Node]
-class Scene extends Node {
+/// Scene is an embedded type for nodes of type IScene.
+/// Boot scenes and Splash scenes are typical examples.
+mixin Scene {
   SceneStates currentState = SceneStates.sceneOffStage;
   SceneStates previousState = SceneStates.sceneOffStage;
 
   double transitionDuration = 0.0;
 
-  Scene();
-
-  factory Scene.create(SceneStates current, SceneStates previous) => Scene()
-    ..currentState = current
-    ..previousState = previous;
+  void initializeScene(SceneStates current, SceneStates previous) {
+    currentState = current;
+    previousState = previous;
+  }
 
 // Notify is the channel NodeManager uses to cmd the Scene.
 // This is the minimal required for an instant transition

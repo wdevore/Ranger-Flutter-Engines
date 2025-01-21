@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
@@ -10,12 +11,13 @@ import 'filters/filter.dart';
 import 'group.dart';
 import 'event.dart';
 import 'lifecycle.dart';
+import 'scene.dart';
 import 'transform.dart';
 import 'transform_stack.dart';
 
 const indent = "   ";
 
-abstract class Node with Transform, Group, Lifecycle, Event {
+abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   // Internal incrementing node id counter
   static int _iDcnt = 0;
 
@@ -40,6 +42,7 @@ abstract class Node with Transform, Group, Lifecycle, Event {
     bounds = Rectangle.zero();
     initializeTransform();
     initializeGroup();
+    // initializeScene(current, previous)
   }
 
   /// [visit] traverses **down** the heirarchy while space-mappings traverses
@@ -164,16 +167,16 @@ abstract class Node with Transform, Group, Lifecycle, Event {
   // -------------------------------------------------------------------
   // Misc
   // -------------------------------------------------------------------
-  void printTree(Node node) {
-    debugPrint('------------- Tree -------------------');
+  static void printTree(Node node) {
+    stdout.write('------------- Tree -------------------\n');
     printBranch(0, node);
 
     if (node.children.isNotEmpty) {
-      printSubTree(children, 1);
+      printSubTree(node.children, 1);
     }
   }
 
-  void printSubTree(ListQueue<Node> children, int level) {
+  static void printSubTree(ListQueue<Node> children, int level) {
     for (var child in children) {
       var subChildren = child.children;
       printBranch(level, child);
@@ -183,7 +186,7 @@ abstract class Node with Transform, Group, Lifecycle, Event {
     }
   }
 
-  void printBranch(int level, Node node) {
+  static void printBranch(int level, Node node) {
     // If a node's name begins with "::" then don't print it.
     // This is handy for particle systems or parent nodes with
     // lots of cloned children.
@@ -192,10 +195,10 @@ abstract class Node with Transform, Group, Lifecycle, Event {
     }
 
     for (var i = 0; i < level; i++) {
-      debugPrint(indent);
+      stdout.write(indent);
     }
 
-    debugPrint(node.name);
+    stdout.write('${node.name}\n');
   }
 
   @override

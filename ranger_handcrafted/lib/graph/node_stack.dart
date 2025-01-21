@@ -10,7 +10,10 @@ class NodeStack {
 
   NodeStack();
 
-  factory NodeStack.create() => NodeStack();
+  factory NodeStack.create() {
+    NodeStack ns = NodeStack()..stack = ListQueue<Node>();
+    return ns;
+  }
 
   bool get isEmpty => stack.isEmpty;
 
@@ -18,6 +21,7 @@ class NodeStack {
 
   void clearRunningNode() => runningNode = null;
 
+  /// Push node onto the top.
   void push(Node node) {
     nextNode = node;
     stack.addFirst(node);
@@ -30,7 +34,10 @@ class NodeStack {
     return nextNode;
   }
 
-  Node top() => stack.first;
+  Node? top() {
+    if (stack.isEmpty) return null;
+    return stack.first;
+  }
 
   // Replacement is the act of popping and pushing. i.e. replacing
   // the stack top with the new node.

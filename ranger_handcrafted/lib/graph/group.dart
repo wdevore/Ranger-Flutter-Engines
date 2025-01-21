@@ -6,7 +6,7 @@ mixin Group {
   late ListQueue<Node> children;
 
   initializeGroup() {
-    children = ListQueue();
+    children = ListQueue<Node>();
   }
 
   Node? getChildByID(int id) {
