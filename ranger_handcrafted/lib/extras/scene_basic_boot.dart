@@ -11,7 +11,8 @@ class SceneBasicBoot extends Node {
   factory SceneBasicBoot.create(String name, World world) {
     SceneBasicBoot scene = SceneBasicBoot()
       ..world = world
-      ..initialize(name);
+      ..initialize(name)
+      ..initializeScene(SceneStates.sceneOffStage, SceneStates.sceneOffStage);
     return scene;
   }
 

@@ -1,8 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-
 import '../geometry/rectangle.dart';
 import '../maths/affinetransform.dart';
 import '../maths/matrix4.dart';
@@ -13,9 +11,9 @@ import 'event.dart';
 import 'lifecycle.dart';
 import 'scene.dart';
 import 'transform.dart';
-import 'transform_stack.dart';
+import 'transform_stack_cached.dart';
 
-const indent = "   ";
+const treeIndent = "   ";
 
 abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   // Internal incrementing node id counter
@@ -42,12 +40,12 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
     bounds = Rectangle.zero();
     initializeTransform();
     initializeGroup();
-    // initializeScene(current, previous)
   }
 
   /// [visit] traverses **down** the heirarchy while space-mappings traverses
   /// **upward**.
-  static void visit(Node node, TransformStack stack, double interpolation) {
+  static void visit(
+      Node node, TransformStackCached stack, double interpolation) {
     // Checking visibility here would cause any children that are visible
     // to not be rendered.
     // TODO Add parent and children flags for individual control.
@@ -167,21 +165,26 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   // -------------------------------------------------------------------
   // Misc
   // -------------------------------------------------------------------
-  static void printTree(Node node) {
+  static void printTree(World world, Node node) {
     stdout.write('------------- Tree -------------------\n');
     printBranch(0, node);
 
     if (node.children.isNotEmpty) {
-      printSubTree(node.children, 1);
+      printSubTree(world, node.children, 1);
+    }
+
+    stdout.write('------------- Scene Stack -------------------\n');
+    for (var node in world.sceneStack) {
+      stdout.write('$node\n');
     }
   }
 
-  static void printSubTree(ListQueue<Node> children, int level) {
+  static void printSubTree(World world, ListQueue<Node> children, int level) {
     for (var child in children) {
       var subChildren = child.children;
       printBranch(level, child);
       if (subChildren.isNotEmpty) {
-        printSubTree(subChildren, level);
+        printSubTree(world, subChildren, level);
       }
     }
   }
@@ -195,7 +198,7 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
     }
 
     for (var i = 0; i < level; i++) {
-      stdout.write(indent);
+      stdout.write(treeIndent);
     }
 
     stdout.write('${node.name}\n');
@@ -203,6 +206,6 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
 
   @override
   String toString() {
-    return '<|\'$name\' ($id)|>';
+    return ':\'$name\' ($id):';
   }
 }

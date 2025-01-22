@@ -10,7 +10,7 @@ void testEngine() {
   group('Engine', () {
     test('Begin exception', () {
       Engine engine = Engine.create('relativePath', 'overrides');
-      engine.begin(true);
+      engine.begin();
       expect(engine.lastException != null, isTrue);
       // We expect the exception because we didn't add any scenes.
       expect(
@@ -30,10 +30,12 @@ void testEngine() {
       //         /-----------------/  | \-----------------\
       //         |                    |                   |
       //      Underlay              Scenes             Overlay
-      //                           /      \
-      //              In:Boot Scene        Out:Splash Scene
-      //                                        |
-      //                                      Layer
+      //                              |
+      //                              -- stack [Scenes]
+      //                                    \
+      //                              In:Boot Scene -> Out:Splash Scene
+      //                                                     |
+      //                                                   Layer
 
       World world = engine.world;
 
@@ -44,9 +46,10 @@ void testEngine() {
       SceneBasicBoot boot = SceneBasicBoot.create('Boot', world);
       world.push(boot);
 
-      Node.printTree(world.root); // TODO add printing of scenes too
+      Node.printTree(world, world.root);
 
-      engine.begin(true);
+      engine.runOneLoop = true; // We don't want the engine to continue running.
+      engine.begin();
 
       // We don't expect an exception because Nodes were pushed.
       expect(engine.lastException == null, isTrue);

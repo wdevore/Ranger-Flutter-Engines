@@ -1,8 +1,9 @@
+import 'dart:collection';
+
 import 'extras/group_node.dart';
 import 'graph/event.dart';
 import 'graph/node.dart';
 import 'graph/node_manager.dart';
-import 'graph/scene.dart';
 
 class WorldException implements Exception {
   final String message;
@@ -34,6 +35,8 @@ class World {
     return w;
   }
 
+  ListQueue<Node> get sceneStack => sceneGraph.stack.stack;
+
   /// [begin] is called by the Engine during Construct(). The Under/Over lays may
   /// be populated afterwards.
   void begin() {
@@ -44,8 +47,10 @@ class World {
     //         /-----------------/  | \-----------------\
     //         |                    |                   |
     //      Underlay              Scenes             Overlay
-    //                           /      \
-    //                   In:Scene        Out:Scene
+    //                              |
+    //                              -- stack [Scenes]
+    //                                    \
+    //                                In:Scene -> Out:Scene
     //
     // From here the NM's job is to Add/Remove Scenes from the Scenes-Node
 

@@ -3,7 +3,7 @@ import '../world.dart';
 import 'node.dart';
 import 'node_stack.dart';
 import 'scene.dart';
-import 'transform_stack.dart';
+import 'transform_stack_cached.dart';
 
 class NodeException implements Exception {
   final String message;
@@ -17,7 +17,7 @@ class NodeManager {
   bool clearBackground = false;
 
   late NodeStack stack;
-  late TransformStack transformStack;
+  late TransformStackCached transformStack;
   List<Node> timingTargets = [];
   List<Node> eventTargets = [];
 
@@ -39,7 +39,7 @@ class NodeManager {
     NodeManager nm = NodeManager();
 
     nm.stack = NodeStack.create();
-    nm.transformStack = TransformStack.create();
+    nm.transformStack = TransformStackCached.create();
 
     return nm;
   }

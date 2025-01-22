@@ -88,6 +88,11 @@ class Matrix4 {
     return m;
   }
 
+  factory Matrix4.createFrom(Matrix4 from) {
+    Matrix4 m = Matrix4()..setFrom(from);
+    return m;
+  }
+
   factory Matrix4.identity() => Matrix4()..toIdentity();
 
   void toIdentity() {
@@ -443,7 +448,7 @@ class Matrix4 {
     //      [m20  m21  m22  m23]
     //      [m30  m31  m32  m33]
 
-    s += '|${e[m00].toStringAsPrecision((5))}';
+    s += '\n|${e[m00].toStringAsPrecision((5))}';
     s += ',${e[m01].toStringAsPrecision((5))}';
     s += ',${e[m02].toStringAsPrecision((5))}';
     s += ',${e[m03].toStringAsPrecision((5))}|\n';

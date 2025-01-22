@@ -9,6 +9,8 @@ class Engine {
 
   String? lastException;
   bool running = false;
+
+  // ------- DEBUG -----------
   bool runOneLoop = false;
 
   Engine();
@@ -35,8 +37,7 @@ class Engine {
 
   /// [begin] is called after create() and as the last thing the engine
   /// does to start the game.
-  void begin(bool runOneLoop) {
-    this.runOneLoop = runOneLoop;
+  void begin() {
     running = true;
 
     var scenegraph = world.sceneGraph;
