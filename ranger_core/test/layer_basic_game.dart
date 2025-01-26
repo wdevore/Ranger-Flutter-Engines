@@ -1,8 +1,8 @@
-import 'package:ranger_handcrafted/graph/node.dart';
-import 'package:ranger_handcrafted/graph/scene.dart';
-import 'package:ranger_handcrafted/world.dart';
+import 'package:ranger_core/src/graph/node.dart';
+import 'package:ranger_core/src/graph/scene.dart';
 
 import 'my_square_node.dart';
+import 'world.dart';
 
 class LayerBasicGame extends Node {
   late MySquareNode squareNode;
@@ -11,7 +11,6 @@ class LayerBasicGame extends Node {
 
   factory LayerBasicGame.create(String name, World world, Node parent) {
     LayerBasicGame layer = LayerBasicGame()
-      ..world = world
       ..initialize(name)
       ..parent = parent
       ..initializeScene(SceneStates.sceneOffStage, SceneStates.sceneOffStage);

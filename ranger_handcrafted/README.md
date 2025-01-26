@@ -1,6 +1,14 @@
-# ranger_handcrafted
+# basic_gameloop
+This is bare minimum of building a game loop in flutter.
 
-A port of [Ranger-Go-IGE](https://github.com/wdevore/Ranger-Go-IGE/tree/master) to Flutter. It used Flame's forge2d
+# range_flame
+A port of [Ranger-Go-IGE](https://github.com/wdevore/Ranger-Go-IGE/tree/master) to Flutter. It uses Flame engine.
+
+# range_core
+This is the Ranger game engine in a package.
+
+# ranger_handcrafted
+This is a basic gameloop enhanced for Ranger.
 
 # Tasks
 - Maths

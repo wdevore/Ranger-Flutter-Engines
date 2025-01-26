@@ -1,5 +1,4 @@
-import 'package:ranger_handcrafted/maths/matrix4.dart';
-
+import '../maths/matrix4.dart';
 import 'node.dart';
 
 final class StandardNode extends Node {

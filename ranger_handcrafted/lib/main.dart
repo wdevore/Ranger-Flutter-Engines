@@ -1,102 +1,42 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
+import 'engine.dart';
+import 'game_painter.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(GameApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GameApp extends StatelessWidget {
+  const GameApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: _MyPage(),
+      home: _GamePage(),
     );
   }
 }
 
-class MyGame extends CustomPainter {
-  final World world;
-  final double x;
-  final double y;
-  final double t;
-
-  /// When [animation] notifies listeners this custom painter will repaint.
-  MyGame(this.world, this.x, this.y, this.t, Animation<double> animation)
-      : super(repaint: animation);
+class _GamePage extends StatefulWidget {
+  const _GamePage();
 
   @override
-  void paint(Canvas canvas, Size size) {
-    world.input(200, 200);
-    world.update(t);
-    world.render(t, canvas);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  _GamePageState createState() => _GamePageState();
 }
 
-class _MyPage extends StatefulWidget {
-  const _MyPage();
-
-  @override
-  _MyPageState createState() => _MyPageState();
-}
-
-class World {
-  double _turn = 0.0;
-  double _x;
-  double _y;
-  final Paint bgColor = Paint()..color = Colors.black54;
-  final Paint blockColor = Paint()..color = Colors.orange;
-  final double size = 200.0;
-  final double tau = math.pi * 2;
-  final double rotationsPerSecond = 0.55;
-
-  World(this._x, this._y);
-
-  void input(double x, double y) {
-    _x = x;
-    _y = y;
-  }
-
-  void render(double t, Canvas canvas) {
-    canvas.drawPaint(bgColor);
-
-    canvas.save();
-
-    canvas.translate(_x, _y);
-    canvas.rotate(tau * _turn);
-
-    canvas.drawRect(
-      Rect.fromLTWH(
-        -size / 2,
-        -size / 2,
-        size,
-        size,
-      ),
-      blockColor,
-    );
-
-    canvas.restore();
-  }
-
-  void update(double t) {
-    _turn += t * rotationsPerSecond;
-  }
-}
-
-class _MyPageState extends State<_MyPage> with SingleTickerProviderStateMixin {
+class _GamePageState extends State<_GamePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  World world = World(0.0, 0.0);
+
+  Engine engine = Engine.create('relativePath', 'overrides');
+
   final DateTime _initialTime = DateTime.now();
+
   double previous = 0.0;
-  double pointerx = 0.0;
-  double pointery = 0.0;
+
   double get currentTime =>
       DateTime.now().difference(_initialTime).inMilliseconds / 1000.0;
 
@@ -107,11 +47,29 @@ class _MyPageState extends State<_MyPage> with SingleTickerProviderStateMixin {
     previous = curr;
 
     return Scaffold(
-      body: CustomPaint(
-        painter: MyGame(world, pointerx, pointery, dt, _animation),
-        child: SizedBox.expand(), // Be as big as possible
+      body: MouseRegion(
+        onHover: (event) => engine.inputMouseMove(event),
+        child: GestureDetector(
+          onPanDown: (details) => engine.inputPanDown(details),
+          onPanUpdate: (details) => engine.inputPanUpdate(details),
+          child: CustomPaint(
+            painter: GamePainter(engine, dt, _animation, _controller),
+            child: _buildErrorExceptionOverlay(),
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _buildErrorExceptionOverlay() {
+    switch (engine.running) {
+      case EngineState.exited:
+        return Center(child: Text('Engine Exited'));
+      case EngineState.halted:
+        return Center(child: Text('Engine halted'));
+      default:
+        return SizedBox.expand(); // Be as big as possible
+    }
   }
 
   @override
@@ -125,10 +83,56 @@ class _MyPageState extends State<_MyPage> with SingleTickerProviderStateMixin {
     super.initState();
 
     previous = currentTime;
+
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 1))
           ..repeat();
+
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+
     _controller.repeat();
   }
 }
+
+// class World {
+//   double _turn = 0.0;
+//   double _x;
+//   double _y;
+//   final Paint bgColor = Paint()..color = Colors.black54;
+//   final Paint blockColor = Paint()..color = Colors.orange;
+//   final double size = 200.0;
+//   final double tau = math.pi * 2;
+//   final double rotationsPerSecond = 0.55;
+
+//   World(this._x, this._y);
+
+//   void input(double x, double y) {
+//     _x = x;
+//     _y = y;
+//   }
+
+//   void render(double t, Canvas canvas) {
+//     canvas.drawPaint(bgColor);
+
+//     canvas.save();
+
+//     canvas.translate(_x, _y);
+//     canvas.rotate(tau * _turn);
+
+//     canvas.drawRect(
+//       Rect.fromLTWH(
+//         -size / 2,
+//         -size / 2,
+//         size,
+//         size,
+//       ),
+//       blockColor,
+//     );
+
+//     canvas.restore();
+//   }
+
+//   void update(double t) {
+//     _turn += t * rotationsPerSecond;
+//   }
+// }

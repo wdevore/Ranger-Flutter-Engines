@@ -1,19 +1,9 @@
+import '../exceptions.dart';
 import '../maths/matrix4.dart';
-import '../world.dart';
 import 'node.dart';
 import 'node_stack.dart';
 import 'scene.dart';
 import 'transform_stack_cached.dart';
-
-class NodeException implements Exception {
-  final String message;
-  NodeException(this.message);
-
-  @override
-  String toString() {
-    return 'NodeException: $message';
-  }
-}
 
 /// The node manager is basically the SceneGraph
 class NodeManager {
@@ -49,7 +39,7 @@ class NodeManager {
     return nm;
   }
 
-  void configure(World world) {
+  void configure() {
     var identity = Matrix4.identity();
     transformStack.initialize(identity);
   }

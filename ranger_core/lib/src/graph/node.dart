@@ -4,7 +4,6 @@ import 'dart:io';
 import '../geometry/rectangle.dart';
 import '../maths/affinetransform.dart';
 import '../maths/matrix4.dart';
-import '../world.dart';
 import 'filters/filter.dart';
 import 'group.dart';
 import 'event.dart';
@@ -30,7 +29,6 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   bool dirty = true;
 
   Node? parent;
-  late World world;
 
   late Rectangle bounds;
 
@@ -165,26 +163,27 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   // -------------------------------------------------------------------
   // Misc
   // -------------------------------------------------------------------
-  static void printTree(World world, Node node) {
+  static void printTree(ListQueue<Node> sceneStack, Node node) {
     stdout.write('------------- Tree -------------------\n');
     printBranch(0, node);
 
     if (node.children.isNotEmpty) {
-      printSubTree(world, node.children, 1);
+      printSubTree(sceneStack, node.children, 1);
     }
 
     stdout.write('------------- Scene Stack -------------------\n');
-    for (var node in world.sceneStack) {
+    for (var node in sceneStack) {
       stdout.write('$node\n');
     }
   }
 
-  static void printSubTree(World world, ListQueue<Node> children, int level) {
+  static void printSubTree(
+      ListQueue<Node> sceneStack, ListQueue<Node> children, int level) {
     for (var child in children) {
       var subChildren = child.children;
       printBranch(level, child);
       if (subChildren.isNotEmpty) {
-        printSubTree(world, subChildren, level);
+        printSubTree(sceneStack, subChildren, level);
       }
     }
   }

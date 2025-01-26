@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ranger_handcrafted/exceptions/world_exception.dart';
-import 'package:ranger_handcrafted/graph/node_manager.dart';
+import 'package:ranger_core/src/exceptions.dart';
+import 'package:ranger_core/src/graph/node_manager.dart';
 
 import 'world.dart';
 
@@ -41,7 +41,7 @@ class Engine {
   }
 
   void configure() {
-    world.sceneGraph.configure(world);
+    world.sceneGraph.configure();
   }
 
   /// [begin] is called after create() and as the last thing the engine
