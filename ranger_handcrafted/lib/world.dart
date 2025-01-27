@@ -1,10 +1,6 @@
 import 'dart:collection';
 
-import 'extras/group_node.dart';
-import 'extras/shapes/atlas.dart';
-import 'graph/event.dart';
-import 'graph/node.dart';
-import 'graph/node_manager.dart';
+import 'package:ranger_core/ranger_core.dart';
 
 /// [World] is contained within the [Engine]
 class World {
@@ -28,7 +24,7 @@ class World {
       ..sceneGraph = NodeManager.create()
       ..relativePath = relativePath;
 
-    w.sceneGraph.configure(w);
+    w.sceneGraph.configure();
 
     return w;
   }
@@ -53,13 +49,13 @@ class World {
     // From here the NM's job is to Add/Remove Scenes from the Scenes-Node
 
     // Create Root first and above all (pun intended) do it NOW! ;-)
-    root = GroupNode.create('Root', this, null);
+    root = GroupNode.create('Root', null);
 
-    underlay = GroupNode.create('Underlay', this, root);
+    underlay = GroupNode.create('Underlay', root);
 
-    scenes = GroupNode.create('Scenes', this, root);
+    scenes = GroupNode.create('Scenes', root);
 
-    overlay = GroupNode.create('Overlay', this, root);
+    overlay = GroupNode.create('Overlay', root);
 
     sceneGraph.root = root;
   }

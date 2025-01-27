@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../exceptions.dart';
-import '../maths/matrix4.dart';
+import '../maths/matrix4.dart' as mat;
 import 'node.dart';
 import 'node_stack.dart';
 import 'scene.dart';
@@ -25,8 +27,8 @@ class NodeManager {
   // projection *display.Projection
   // viewport   *display.Viewport
 
-  final Matrix4 preM4 = Matrix4.identity();
-  final Matrix4 postM4 = Matrix4.identity();
+  final mat.Matrix4 preM4 = mat.Matrix4.identity();
+  final mat.Matrix4 postM4 = mat.Matrix4.identity();
 
   NodeManager();
 
@@ -40,7 +42,7 @@ class NodeManager {
   }
 
   void configure() {
-    var identity = Matrix4.identity();
+    var identity = mat.Matrix4.identity();
     transformStack.initialize(identity);
   }
 
@@ -64,18 +66,18 @@ class NodeManager {
     scenes = root.getChildByName('Scenes');
   }
 
-  bool visit(double interpolation) {
+  bool visit(double interpolation, Canvas canvas) {
     transformStack.save();
 
     // Up to two Scene Nodes can run at a time: Outgoing and Incoming.
-    var visitState = continueVisit(interpolation);
+    var visitState = continueVisit(interpolation, canvas);
 
     transformStack.restore();
 
     return visitState; // continue to draw.
   }
 
-  bool continueVisit(double interpolation) {
+  bool continueVisit(double interpolation, Canvas canvas) {
     if (currentScene != null && currentScene is! Scene) {
       throw NodeException('continueVisit: Current Scene node is not a Scene.');
     }
@@ -143,7 +145,7 @@ class NodeManager {
     // Now that visible Scene(s) have been attached/detached to the main Scene
     // node we can Visit the "Root" node.
     // -------------------------------------------------------
-    Node.visit(root, transformStack, interpolation);
+    Node.visit(root, transformStack, interpolation, canvas);
 
     // When the current scene is the last scene to exit the stage
     // then the game is over.

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ranger_core/ranger_core.dart';
 
 import 'engine.dart';
-import 'game_painter.dart';
+import 'nodes/scene_basic_splash.dart';
+import 'world.dart';
 
 void main() {
   runApp(GameApp());
@@ -31,7 +33,21 @@ class _GamePageState extends State<_GamePage>
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  Engine engine = Engine.create('relativePath', 'overrides');
+  late Engine engine;
+
+  _GamePageState() {
+    engine = Engine.create('relativePath', 'overrides');
+    World world = engine.world;
+
+    SceneBasicSplash splash = SceneBasicSplash.create('Splash', world);
+    world.push(splash);
+
+    // Last scene pushed is the first to run.
+    SceneBasicBoot boot = SceneBasicBoot.create('Boot');
+    world.push(boot);
+
+    engine.begin();
+  }
 
   final DateTime _initialTime = DateTime.now();
 

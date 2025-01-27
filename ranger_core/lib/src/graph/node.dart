@@ -1,20 +1,22 @@
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 import '../geometry/rectangle.dart';
 import '../maths/affinetransform.dart';
-import '../maths/matrix4.dart';
+import '../maths/matrix4.dart' as mat;
 import 'filters/filter.dart';
 import 'group.dart';
 import 'event.dart';
 import 'lifecycle.dart';
 import 'scene.dart';
-import 'transform.dart';
+import 'transform.dart' as trxs;
 import 'transform_stack_cached.dart';
 
 const treeIndent = "   ";
 
-abstract class Node with Scene, Transform, Group, Lifecycle, Event {
+abstract class Node with Scene, trxs.Transform, Group, Lifecycle, Event {
   // Internal incrementing node id counter
   static int _iDcnt = 0;
 
@@ -42,8 +44,8 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
 
   /// [visit] traverses **down** the heirarchy while space-mappings traverses
   /// **upward**.
-  static void visit(
-      Node node, TransformStackCached stack, double interpolation) {
+  static void visit(Node node, TransformStackCached stack, double interpolation,
+      Canvas canvas) {
     // Checking visibility here would cause any children that are visible
     // to not be rendered.
     // TODO Add parent and children flags for individual control.
@@ -63,7 +65,7 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
     var model = stack.applyAffine(aft);
 
     // TODO add Atlas features for images
-    node.render(model);
+    node.render(model, canvas);
 
     // Some of the children may still be visible.
     // Note: if you want the parent AND children to be invisible then you
@@ -74,7 +76,7 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
         if (node is Filter) {
           // TODO add filter.visit(stack, interpolation)
         } else {
-          visit(node, stack, interpolation);
+          visit(node, stack, interpolation, canvas);
         }
       }
     }
@@ -107,7 +109,7 @@ abstract class Node with Scene, Transform, Group, Lifecycle, Event {
   ///
   /// You must **override** this in your custom [Node] if your [Node]
   /// needs to perform custom rendering.
-  void render(Matrix4 model) {}
+  void render(mat.Matrix4 model, Canvas canvas) {}
 
   void setPosition(double x, double y) {
     position.x = x;

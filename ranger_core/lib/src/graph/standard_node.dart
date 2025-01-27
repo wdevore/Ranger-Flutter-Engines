@@ -1,4 +1,6 @@
-import '../maths/matrix4.dart';
+import 'package:flutter/material.dart';
+
+import '../maths/matrix4.dart' as mat;
 import 'node.dart';
 
 final class StandardNode extends Node {
@@ -13,7 +15,7 @@ final class StandardNode extends Node {
   }
 
   @override
-  void render(Matrix4 model) {
+  void render(mat.Matrix4 model, Canvas canvas) {
     // TODO: implement draw
   }
 }

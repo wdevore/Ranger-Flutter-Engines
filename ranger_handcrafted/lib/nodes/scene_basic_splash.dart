@@ -1,18 +1,17 @@
-import 'package:ranger_handcrafted/graph/node.dart';
-import 'package:ranger_handcrafted/graph/scene.dart';
-import 'package:ranger_handcrafted/world.dart';
+import 'package:ranger_core/ranger_core.dart' as core;
 
 import 'layer_basic_game.dart';
+import '../world.dart';
 
-class SceneBasicSplash extends Node {
+class SceneBasicSplash extends core.Node {
   SceneBasicSplash();
 
   factory SceneBasicSplash.create(String name, World world) {
     SceneBasicSplash scene = SceneBasicSplash()
-      ..world = world
       ..initialize(name)
       ..build(world)
-      ..initializeScene(SceneStates.sceneOffStage, SceneStates.sceneOffStage);
+      ..initializeScene(
+          core.SceneStates.sceneOffStage, core.SceneStates.sceneOffStage);
     return scene;
   }
 

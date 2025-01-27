@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 enum EngineState {
@@ -15,4 +16,8 @@ abstract class EngineCore {
 
   void update(double dt);
   void render(double dt, Canvas canvas);
+
+  void inputMouseMove(PointerHoverEvent event);
+  void inputPanDown(DragDownDetails details);
+  void inputPanUpdate(DragUpdateDetails details);
 }

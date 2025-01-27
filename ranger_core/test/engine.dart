@@ -61,21 +61,21 @@ class Engine {
   }
 
   // DEPRECATED
-  void loop(NodeManager scenegraph) {
-    var interpolation = 0.0;
+  // void loop(NodeManager scenegraph) {
+  //   var interpolation = 0.0;
 
-    while (running == EngineState.running) {
-      scenegraph.update(0.0, 0.0);
+  //   while (running == EngineState.running) {
+  //     scenegraph.update(0.0, 0.0);
 
-      // Once the last scene has exited the stage we stop running.
-      bool moreScenes = scenegraph.visit(interpolation);
+  //     // Once the last scene has exited the stage we stop running.
+  //     bool moreScenes = scenegraph.visit(interpolation);
 
-      if (!moreScenes || runOneLoop) {
-        running = EngineState.halted;
-        continue;
-      }
-    }
-  }
+  //     if (!moreScenes || runOneLoop) {
+  //       running = EngineState.halted;
+  //       continue;
+  //     }
+  //   }
+  // }
 
   void end() {
     world.end();
@@ -92,7 +92,7 @@ class Engine {
   void render(double dt, Canvas canvas) {
     // Once the last scene has exited the stage we stop running.
     try {
-      bool moreScenes = world.sceneGraph.visit(0.0);
+      bool moreScenes = world.sceneGraph.visit(0.0, canvas);
       if (!moreScenes) {
         running = EngineState.exited;
       }
