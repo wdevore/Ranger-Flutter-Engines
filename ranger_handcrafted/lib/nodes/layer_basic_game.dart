@@ -25,6 +25,7 @@ class LayerBasicGame extends core.Node {
     // Add nodes
     squareNode = MySquareNode.create('Square', world, this);
     squareNode.setPosition(300.0, 300.0);
+    squareNode.setScale(100.0);
   }
 
   @override

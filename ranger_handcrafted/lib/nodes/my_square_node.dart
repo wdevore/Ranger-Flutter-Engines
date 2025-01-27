@@ -27,8 +27,6 @@ class MySquareNode extends core.Node {
   }
 
   void build(core.Atlas atlas) {
-    setScale(100.0);
-
     core.SquareShape shape =
         core.SquareShape.create(core.Atlas.createSquareRect(), name);
     atlas.addShape(shape);
