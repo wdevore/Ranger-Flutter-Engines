@@ -46,7 +46,7 @@ class NodeManager {
     transformStack.initialize(identity);
   }
 
-  void begin() {
+  void enter() {
     if (stack.isEmpty || stack.stack.length < 2) {
       throw NodeException(
           'begin: Not enough scenes to start engine. There must be 2 or more');

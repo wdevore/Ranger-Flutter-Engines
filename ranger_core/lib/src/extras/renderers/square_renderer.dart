@@ -9,6 +9,8 @@ class SquareRenderer extends Renderer {
 
   SquareRenderer(this.shape);
 
+  factory SquareRenderer.create(Shape shape) => SquareRenderer(shape);
+
   @override
   void render(Canvas canvas, Node node) {
     canvas.save();
@@ -27,6 +29,14 @@ class SquareRenderer extends Renderer {
       canvas.scale(node.scale.x, node.scale.y);
     }
 
+    // Base axies are:
+    // .------------> +X
+    // |
+    // |
+    // |
+    // |
+    // |
+    // v +Y
     shape.draw(canvas);
 
     canvas.restore();

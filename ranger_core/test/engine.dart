@@ -52,7 +52,7 @@ class Engine {
     var scenegraph = world.sceneGraph;
 
     // try {
-    scenegraph.begin();
+    scenegraph.enter();
     //   loop(scenegraph);
     // } on NodeException catch (e) {
     //   lastException = e.message;

@@ -14,8 +14,9 @@ abstract class EngineCore {
   // ------- DEBUG -----------
   bool runOneLoop = false;
 
+  void boot();
   void update(double dt);
-  void render(double dt, Canvas canvas);
+  void render(Canvas canvas);
 
   void inputMouseMove(PointerHoverEvent event);
   void inputPanDown(DragDownDetails details);

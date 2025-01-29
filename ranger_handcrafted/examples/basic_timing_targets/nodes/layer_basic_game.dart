@@ -23,10 +23,11 @@ class LayerBasicGame extends core.Node {
 
   void build(World world) {
     // Add nodes
-    squareNode = MySquareNode.create('Square', world, this);
-    squareNode.setPosition(300.0, 300.0);
-    squareNode.setRotation(45.0 * core.degreesToRadians);
+    squareNode = MySquareNode.create('Square', 45.0, world, this);
+    squareNode.setPosition(300.0, 200.0);
     squareNode.setScale(100.0);
+
+    world.sceneGraph.registerTarget(squareNode);
   }
 
   @override

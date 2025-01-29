@@ -18,18 +18,51 @@ class Atlas {
   static Rect createSquareRect([bool centered = true]) {
     Rect rect;
     if (centered) {
-      rect = Rect.fromLTWH(
-        -0.5,
-        -0.5,
-        0.5,
-        0.5,
-      );
+      rect = Rect.fromCenter(center: Offset(0.0, 0.0), width: 1.0, height: 1.0);
+      // Above is equal to:
+      // rect = Rect.fromLTWH(
+      //   -0.5,
+      //   -0.5,
+      //   1.0,
+      //   1.0,
+      // );
     } else {
+      // The top-left corner is:
+      //    TL
+      //   (0,0) <--- rotation is about this point
+      //     .---------------.
+      //     |       |       |
+      //     |       |       |
+      //     |-------.       | H
+      //     |               |
+      //     |               |
+      //     |               |
+      //     .---------------.(w,h) = BR
+      //             W
+      //
+      // rect = Rect.fromLTWH(
+      //   0.0,
+      //   0.0,
+      //   1.0,
+      //   1.0,
+      // );
+      // If you want to rotate about the bottom-right (BR)
+      //       TL
+      //   (-0.5,-0.5)
+      //        .--------........
+      //        |       |       .
+      //        |       |       .
+      //        |-------.       . H
+      //        .        BR  <--.-- rotation is about this point
+      //        .               .
+      //        .               .
+      //        ...............-.(w,h)
+      //                W
       rect = Rect.fromLTWH(
-        0.0,
-        0.0,
-        1.0,
-        1.0,
+        -0.5,
+        -0.5,
+        0.5,
+        0.5,
       );
     }
     return rect;
