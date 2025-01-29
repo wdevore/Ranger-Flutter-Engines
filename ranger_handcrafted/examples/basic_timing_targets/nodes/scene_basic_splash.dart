@@ -19,15 +19,25 @@ class SceneBasicSplash extends core.Node {
     LayerBasicGame.create('Game Layer', world, this);
   }
 
+  // --------------------------------------------------------
+  // Transitioning
+  // --------------------------------------------------------
+  @override
+  void notify(core.SceneStates state) {
+    print('SceneBasicSplash notify: $name :: $state');
+
+    // currentState = core.SceneStates.sceneExitedStage;
+  }
+
   @override
   void enterScene(core.NodeManager man) {
-    print('Enter scene: $name');
+    print('SceneBasicSplash Enter scene: $name');
     man.registerTarget(this);
   }
 
   @override
   bool exitScene(core.NodeManager man) {
-    print('Exit scene: $name');
+    print('SceneBasicSplash Exit scene: $name');
     man.unRegisterTarget(this);
     return false;
   }

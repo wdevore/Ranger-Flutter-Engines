@@ -94,8 +94,15 @@ class NodeManager {
         // to begin transitioning onto the stage.
         scenes!.insertShift(currentScene!);
 
+        // Notify the current scene it should start to transition onto the stage.
         setSceneState(
             currentScene as Scene, SceneStates.sceneTransitionStartIn);
+        break;
+      case SceneStates.sceneTransitioningIn:
+        // The currentScene wants to transition onto the stage.
+
+        // enterScene(nextScene!);
+
         break;
       case SceneStates.sceneTransitionStartOut:
         // The current scene wants to transition off the stage.
@@ -181,6 +188,8 @@ class NodeManager {
 // Timing
 // --------------------------------------------------------------------------
   void update(double msPerUpdate, double secPerUpdate) {
+    // TODO add visibility code so that updates are not called on objects that
+    // are visible.
     for (var target in timingTargets) {
       target.update(msPerUpdate, secPerUpdate);
     }
@@ -219,7 +228,7 @@ class NodeManager {
     pooled = node.exitScene(this);
 
     for (var child in node.children) {
-      enterNode(child);
+      exitNode(child);
     }
 
     return pooled;

@@ -27,9 +27,13 @@ class LayerBasicGame extends core.Node {
     squareNode.setPosition(300.0, 200.0);
     squareNode.setScale(100.0);
 
+    // Register to get timing update events.
     world.sceneGraph.registerTarget(squareNode);
   }
 
+  // NOTE: you must register this Node in the build method first.
+  // For example:
+  // world.sceneGraph.registerTarget(this);
   @override
   void update(double msPerUpdate, double secPerUpdate) {
     // Update a node property here.
