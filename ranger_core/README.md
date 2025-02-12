@@ -11,8 +11,9 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/to/develop-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This is the core component of the Range game engine. See this diagram for visual details:
+
+https://app.diagrams.net/?src=about#G1VWCqR1bKGlY2opqm7-jBWvWm8y4bscc2#%7B%22pageId%22%3A%22y1rbRtmxgIJ2F5rB1gJL%22%7D
 
 ## Features
 

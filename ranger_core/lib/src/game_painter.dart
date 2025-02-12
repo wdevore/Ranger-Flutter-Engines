@@ -4,6 +4,7 @@ import 'engine_core.dart';
 
 class GamePainter extends CustomPainter {
   final EngineCore engine;
+  bool running = true;
 
   final Animation<double> animation;
   final AnimationController _controller;
@@ -17,7 +18,7 @@ class GamePainter extends CustomPainter {
   /// When [animation] notifies listeners this custom painter will repaint.
   GamePainter(this.engine, this.animation, this._controller)
       : super(repaint: animation) {
-    engine.running = EngineState.running;
+    engine.state = EngineState.running;
   }
 
   double get currentTime => DateTime.now()
@@ -36,17 +37,19 @@ class GamePainter extends CustomPainter {
 
     canvas.drawPaint(baseBackgroundColor);
 
-    if (engine.running == EngineState.running) {
-      engine.update(dt);
-
-      engine.render(canvas);
-    } else {
-      if (engine.running == EngineState.halted) {
-        canvas.drawPaint(Paint()..color = Colors.deepOrange);
-      } else if (engine.running == EngineState.exited) {
-        canvas.drawPaint(Paint()..color = Colors.brown);
+    if (!engine.runOneLoop) {
+      if (engine.state == EngineState.running) {
+        engine.update(dt); // Update is independent of visibility
+        engine.render(canvas);
+      } else {
+        running = false;
+        if (engine.state == EngineState.halted) {
+          canvas.drawPaint(Paint()..color = Colors.deepOrange);
+        } else if (engine.state == EngineState.exited) {
+          canvas.drawPaint(Paint()..color = Colors.brown);
+        }
+        _controller.stop();
       }
-      _controller.stop();
     }
   }
 

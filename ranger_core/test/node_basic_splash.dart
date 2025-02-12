@@ -1,9 +1,9 @@
-import 'package:ranger_core/ranger_core.dart' as core;
+import 'package:ranger_core/src/graph/node.dart';
 
 import 'layer_basic_game.dart';
-import '../world.dart';
+import 'world.dart';
 
-class NodeBasicSplash extends core.Node {
+class NodeBasicSplash extends Node {
   NodeBasicSplash();
 
   factory NodeBasicSplash.create(String name, World world) {
@@ -17,13 +17,12 @@ class NodeBasicSplash extends core.Node {
     LayerBasicGame.create('Game Layer', world, this);
   }
 
-  // --------------------------------------------------------
-  // Signals from NodeManager (NM) or other Nodes via NM
-  // --------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Signals between Nodes and NodeManager
+  // --------------------------------------------------------------------------
   @override
-  void receiveSignal(core.NodeSignal signal) {
+  void receiveSignal(NodeSignal signal) {
     print('NodeBasicSplash.receiveSignal $signal');
-    super.receiveSignal(signal);
   }
 
   // --------------------------------------------------------------------------

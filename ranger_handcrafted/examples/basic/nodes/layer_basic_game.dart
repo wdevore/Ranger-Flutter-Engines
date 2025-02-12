@@ -11,9 +11,7 @@ class LayerBasicGame extends core.Node {
   factory LayerBasicGame.create(String name, World world, core.Node parent) {
     LayerBasicGame layer = LayerBasicGame()
       ..initialize(name)
-      ..parent = parent
-      ..initializeScene(
-          core.SceneStates.sceneOffStage, core.SceneStates.sceneOffStage);
+      ..parent = parent;
 
     parent.children.addLast(layer);
     layer.build(world);
@@ -29,10 +27,19 @@ class LayerBasicGame extends core.Node {
     squareNode.setScale(100.0);
   }
 
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
   @override
-  void update(double msPerUpdate, double secPerUpdate) {
-    // Update a node property here.
+  void event() {
+    // TODO: implement event
+  }
 
-    super.update(msPerUpdate, secPerUpdate);
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+  @override
+  void timing(double dt) {
+    // TODO: implement timing
   }
 }

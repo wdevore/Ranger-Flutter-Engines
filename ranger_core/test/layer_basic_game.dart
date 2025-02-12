@@ -1,5 +1,4 @@
 import 'package:ranger_core/src/graph/node.dart';
-import 'package:ranger_core/src/graph/scene.dart';
 
 import 'my_square_node.dart';
 import 'world.dart';
@@ -12,8 +11,7 @@ class LayerBasicGame extends Node {
   factory LayerBasicGame.create(String name, World world, Node parent) {
     LayerBasicGame layer = LayerBasicGame()
       ..initialize(name)
-      ..parent = parent
-      ..initializeScene(SceneStates.sceneOffStage, SceneStates.sceneOffStage);
+      ..parent = parent;
 
     parent.children.addLast(layer);
     layer.build(world);
@@ -28,9 +26,15 @@ class LayerBasicGame extends Node {
   }
 
   @override
-  void update(double msPerUpdate, double secPerUpdate) {
-    // Update a node property here.
+  void event() {
+    // TODO: implement event
+  }
 
-    super.update(msPerUpdate, secPerUpdate);
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+  @override
+  void timing(double dt) {
+    // TODO: implement timing
   }
 }

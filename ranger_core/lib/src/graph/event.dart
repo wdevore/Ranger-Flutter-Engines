@@ -1,4 +1,4 @@
-mixin Event {
+mixin Events {
   bool handled = true;
 
 // Handled marks event as handled to stop event bubbling

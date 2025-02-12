@@ -1,6 +1,3 @@
-import 'dart:collection';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../geometry/rectangle.dart';
@@ -9,22 +6,46 @@ import '../maths/matrix4.dart' as mat;
 import 'filters/filter.dart';
 import 'group.dart';
 import 'event.dart';
-import 'lifecycle.dart';
-import 'scene.dart';
+import 'node_signals.dart';
+import 'node_manager.dart';
 import 'transform.dart' as trxs;
 import 'transform_stack_cached.dart';
 
-const treeIndent = "   ";
+enum NodeState {
+  /// Node maintains its current state (i.e. running)
+  maintain,
+  delaying,
 
-abstract class Node with Scene, trxs.Transform, Group, Lifecycle, Event {
+  /// Send signal to NodeManger
+  sendSignal,
+
+  /// Wait for a response signal from NodeManager
+  waitSignal,
+}
+
+enum NodeSignal {
+  /// A Node wants to leave stage
+  requestNodeLeaveStage,
+
+  /// A Node is given permission to leave
+  leaveStageGranted,
+
+  /// Notify a Node that it has moved to the Top
+  nodeMovedToStage,
+}
+
+/// Nodes maintain their own state, however, there are common states that
+/// many may hold.
+abstract class Node with trxs.Transform, Group, Signals, Events {
   // Internal incrementing node id counter
   static int _iDcnt = 0;
 
+  late NodeManager nodeMan;
+
+  NodeState state = NodeState.maintain;
+
   int id = 0;
   String name = '';
-
-  // Associated pixel visual
-  // AtlasX atlas;
 
   bool visible = true;
 
@@ -44,8 +65,12 @@ abstract class Node with Scene, trxs.Transform, Group, Lifecycle, Event {
 
   /// [visit] traverses **down** the heirarchy while space-mappings traverses
   /// **upward**.
-  static void visit(Node node, TransformStackCached stack, double interpolation,
-      Canvas canvas) {
+  static void visit(
+    Node node,
+    TransformStackCached stack,
+    double interpolation,
+    Canvas canvas,
+  ) {
     // Checking visibility here would cause any children that are visible
     // to not be rendered.
     // TODO Add parent and children flags for individual control.
@@ -68,18 +93,21 @@ abstract class Node with Scene, trxs.Transform, Group, Lifecycle, Event {
     node.render(model, canvas);
 
     // Some of the children may still be visible.
+    // TODO add extra flag to choose if parent only or all children are visible
+    // this will minimize bubbling.
     // Note: if you want the parent AND children to be invisible then you
     // need to bubble visibility to parent and children.
 
-    if (node.children.isNotEmpty) {
-      for (var node in node.children) {
-        if (node is Filter) {
-          // TODO add filter.visit(stack, interpolation)
-        } else {
-          visit(node, stack, interpolation, canvas);
-        }
+    // if (node.children.isNotEmpty) {
+    for (var node in node.children) {
+      if (node is Filter) {
+        // TODO add filter.visit(stack, interpolation)
+      } else {
+        // Recurse down the tree.
+        visit(node, stack, interpolation, canvas);
       }
     }
+    // }
 
     stack.restore();
   }
@@ -150,60 +178,35 @@ abstract class Node with Scene, trxs.Transform, Group, Lifecycle, Event {
 
   bool hasParent() => parent != null;
 
-  // Update updates the time properties of a node.
-  void update(double msPerUpdate, double secPerUpdate) {}
-
-  // -----------------------------------------------------
-  // Events
-  // -----------------------------------------------------
-
-  // Handle may handle an IO event
-  bool handleEvent(Event event) {
-    return false;
-  }
-
-  // -------------------------------------------------------------------
-  // Misc
-  // -------------------------------------------------------------------
-  static void printTree(ListQueue<Node> sceneStack, Node node) {
-    stdout.write('------------- Tree -------------------\n');
-    printBranch(0, node);
-
-    if (node.children.isNotEmpty) {
-      printSubTree(sceneStack, node.children, 1);
-    }
-
-    stdout.write('------------- Scene Stack -------------------\n');
-    for (var node in sceneStack) {
-      stdout.write('$node\n');
-    }
-  }
-
-  static void printSubTree(
-      ListQueue<Node> sceneStack, ListQueue<Node> children, int level) {
+  void update(double dt) {
+    // Recurse in children.
     for (var child in children) {
-      var subChildren = child.children;
-      printBranch(level, child);
-      if (subChildren.isNotEmpty) {
-        printSubTree(sceneStack, subChildren, level);
-      }
+      child.update(dt);
     }
   }
 
-  static void printBranch(int level, Node node) {
-    // If a node's name begins with "::" then don't print it.
-    // This is handy for particle systems or parent nodes with
-    // lots of cloned children.
-    if (node.name.substring(0, 2) == "::") {
-      return;
-    }
+  // --------------------------------------------------------------------------
+  // Signals between Nodes and NodeManager
+  // --------------------------------------------------------------------------
+  // Receive signal from NM
+  @override
+  void receiveSignal(NodeSignal signal);
 
-    for (var i = 0; i < level; i++) {
-      stdout.write(treeIndent);
-    }
-
-    stdout.write('${node.name}\n');
+  // Send signal to NM
+  @override
+  void sendSignal(NodeSignal signal) {
+    nodeMan.sendSignal(this, signal);
   }
+
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
+  void event();
+
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+  void timing(double dt) {}
 
   @override
   String toString() {

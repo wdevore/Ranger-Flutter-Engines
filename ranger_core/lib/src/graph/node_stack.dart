@@ -15,6 +15,8 @@ class NodeStack {
     return ns;
   }
 
+  int get length => stack.length;
+
   bool get isEmpty => stack.isEmpty;
 
   void clearNextNode() => nextNode = null;

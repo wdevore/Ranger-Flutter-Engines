@@ -23,7 +23,6 @@ class NodeBasicSplash extends core.Node {
   @override
   void receiveSignal(core.NodeSignal signal) {
     print('NodeBasicSplash.receiveSignal $signal');
-    super.receiveSignal(signal);
   }
 
   // --------------------------------------------------------------------------
@@ -39,6 +38,11 @@ class NodeBasicSplash extends core.Node {
   // --------------------------------------------------------------------------
   @override
   void timing(double dt) {
-    // TODO: implement timing
+    switch (state) {
+      default:
+        // Default is where most of the action takes place.
+        print('default');
+        break;
+    }
   }
 }

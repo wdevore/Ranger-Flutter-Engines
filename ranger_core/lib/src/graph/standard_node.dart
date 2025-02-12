@@ -18,4 +18,14 @@ final class StandardNode extends Node {
   void render(mat.Matrix4 model, Canvas canvas) {
     // TODO: implement draw
   }
+
+  @override
+  void event() {
+    // TODO: implement event
+  }
+
+  @override
+  void timing(dt) {
+    // TODO: implement timing
+  }
 }

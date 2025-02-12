@@ -16,7 +16,11 @@ class MySquareNode extends core.Node {
   /// [parent] is of type Node not "Node?" because leaf nodes always have a
   /// parent.
   factory MySquareNode.create(
-      String name, double initialAngle, World world, core.Node parent) {
+    String name,
+    double initialAngle,
+    World world,
+    core.Node parent,
+  ) {
     MySquareNode my = MySquareNode()
       ..initialize(name)
       ..parent = parent
@@ -40,14 +44,20 @@ class MySquareNode extends core.Node {
     renderer = core.SquareRenderer.create(shape);
   }
 
-  /// Override [Node]'s [update] method in order to get timing target events.
-  /// You must register this node as a timing target with the [NodeManager].
+  // --------------------------------------------------------------------------
+  // Signals between Nodes and NodeManager
+  // --------------------------------------------------------------------------
   @override
-  void update(double msPerUpdate, double secPerUpdate) {
-    setRotation(angle * core.degreesToRadians);
-    angle += angleRate * msPerUpdate;
+  void receiveSignal(core.NodeSignal signal) {
+    print('MySquareNode.receiveSignal $signal');
+  }
 
-    super.update(msPerUpdate, secPerUpdate);
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
+  @override
+  void event() {
+    // TODO: implement event
   }
 
   @override
@@ -55,5 +65,18 @@ class MySquareNode extends core.Node {
     renderer.render(canvas, this);
     // Finally call render incase the base Node wants to decorate/adorn it.
     super.render(model, canvas);
+  }
+
+  @override
+  void update(double dt) {
+    switch (state) {
+      // case NodeState.waitSignal:
+      //   break;
+      default:
+        // Default is where most of the action takes place.
+        setRotation(angle * core.degreesToRadians);
+        angle += angleRate * dt;
+        break;
+    }
   }
 }

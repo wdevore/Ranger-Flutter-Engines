@@ -1,79 +1,33 @@
-import 'dart:collection';
-
-import 'package:ranger_core/src/extras/group_node.dart';
-import 'package:ranger_core/src/extras/shapes/atlas.dart';
-import 'package:ranger_core/src/graph/event.dart';
-import 'package:ranger_core/src/graph/node.dart';
-import 'package:ranger_core/src/graph/node_manager.dart';
+import 'package:ranger_core/ranger_core.dart' as core;
 
 /// [World] is contained within the [Engine]
 class World {
-  // -----------------------------------------
-  // Scene graph is a node manager
-  // -----------------------------------------
-  late NodeManager sceneGraph;
-  late Node root;
-  late Node underlay;
-  late Node scenes;
-  late Node overlay;
-
   late String relativePath;
+  late core.NodeManager nodeManager;
 
-  final Atlas atlas = Atlas();
+  final core.Atlas atlas = core.Atlas();
 
   World();
 
   factory World.create(String relativePath) {
     World w = World()
-      ..sceneGraph = NodeManager.create()
+      ..nodeManager = core.NodeManager.create()
       ..relativePath = relativePath;
 
-    w.sceneGraph.configure();
+    w.nodeManager.configure();
 
     return w;
   }
 
-  ListQueue<Node> get sceneStack => sceneGraph.stack.stack;
-
-  /// [begin] is called by the Engine during Construct(). The Under/Over lays may
-  /// be populated afterwards.
-  void begin() {
-    // The NodeManager needs to build a baseline Node structure for
-    // the runtime environment. Structure:
-    //
-    //                            Root
-    //         /-----------------/  | \-----------------\
-    //         |                    |                   |
-    //      Underlay              Scenes             Overlay
-    //                              |
-    //                              -- stack [Scenes]
-    //                                    \
-    //                                In:Scene -> Out:Scene
-    //
-    // From here the NM's job is to Add/Remove Scenes from the Scenes-Node
-
-    // Create Root first and above all (pun intended) do it NOW! ;-)
-    root = GroupNode.create('Root', null);
-
-    underlay = GroupNode.create('Underlay', root);
-
-    scenes = GroupNode.create('Scenes', root);
-
-    overlay = GroupNode.create('Overlay', root);
-
-    sceneGraph.root = root;
-  }
+  /// [construct] is called by the Engine during Construct().
+  void construct() {}
 
   void end() {
-    sceneGraph.end();
+    nodeManager.close();
   }
 
-  /// Push node onto the top
-  void push(Node scene) {
-    sceneGraph.pushNode(scene);
-  }
-
-  void routeEvents(Event event) {
+  void routeEvents(core.Events event) {
+    // TODO add routing of events
     // NodeManager().RouteEvents(event);
   }
 }

@@ -11,9 +11,7 @@ class LayerBasicGame extends core.Node {
   factory LayerBasicGame.create(String name, World world, core.Node parent) {
     LayerBasicGame layer = LayerBasicGame()
       ..initialize(name)
-      ..parent = parent
-      ..initializeScene(
-          core.SceneStates.sceneOffStage, core.SceneStates.sceneOffStage);
+      ..parent = parent;
 
     parent.children.addLast(layer);
     layer.build(world);
@@ -28,16 +26,22 @@ class LayerBasicGame extends core.Node {
     squareNode.setScale(100.0);
 
     // Register to get timing update events.
-    world.sceneGraph.registerTarget(squareNode);
+    world.nodeManager.registerTarget(squareNode);
   }
 
-  // NOTE: you must register this Node in the build method first.
-  // For example:
-  // world.sceneGraph.registerTarget(this);
+  // --------------------------------------------------------------------------
+  // Signals between Nodes and NodeManager
+  // --------------------------------------------------------------------------
   @override
-  void update(double msPerUpdate, double secPerUpdate) {
-    // Update a node property here.
+  void receiveSignal(core.NodeSignal signal) {
+    print('LayerBasicGame.receiveSignal $signal');
+  }
 
-    super.update(msPerUpdate, secPerUpdate);
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
+  @override
+  void event() {
+    // TODO: implement event
   }
 }

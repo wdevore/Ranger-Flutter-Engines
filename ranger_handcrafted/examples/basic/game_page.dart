@@ -59,7 +59,7 @@ class _GamePageState extends State<_GamePage>
   }
 
   Widget _buildErrorExceptionOverlay() {
-    switch (widget.engine.running) {
+    switch (widget.engine.state) {
       case EngineState.exited:
         return Center(child: Text('Engine Exited'));
       case EngineState.halted:

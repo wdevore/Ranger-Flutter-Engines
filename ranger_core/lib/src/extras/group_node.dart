@@ -13,4 +13,14 @@ class GroupNode extends Node {
 
     return g;
   }
+
+  @override
+  void event() {
+    // TODO: implement event
+  }
+
+  @override
+  void timing(double dt) {
+    // TODO: implement timing
+  }
 }

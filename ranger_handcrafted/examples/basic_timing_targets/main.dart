@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart';
 import 'engine.dart';
 import 'game_page.dart';
-import 'nodes/scene_basic_splash.dart';
+import 'nodes/node_basic_splash.dart';
 import 'world.dart';
 
 Engine _constructGame() {
   Engine engine = Engine.create('relativePath', 'overrides');
   World world = engine.world;
 
-  SceneBasicSplash splash = SceneBasicSplash.create('Splash', world);
-  world.push(splash);
+  NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
+  world.nodeManager.addNode(splash);
+  // Preset Splash to replace NodeBasicBoot when boot exits.
+  // The alternative is that Splash pushes itself.
+  world.nodeManager.pushNode('Splash');
 
-  // Last scene pushed is the first to run.
-  SceneBasicBoot boot = SceneBasicBoot.create('Boot');
-  world.push(boot);
+  NodeBasicBoot boot = NodeBasicBoot.create('Boot', world.nodeManager);
+  world.nodeManager.addNode(boot);
 
-  engine.boot();
+  // The run stack needs at least 1 Node
+  engine.boot(boot.name);
 
   return engine;
 }

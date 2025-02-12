@@ -3,19 +3,43 @@ import 'package:ranger_core/ranger_core.dart' as core;
 import 'layer_basic_game.dart';
 import '../world.dart';
 
-class SceneBasicSplash extends core.Node {
-  SceneBasicSplash();
+class NodeBasicSplash extends core.Node {
+  NodeBasicSplash();
 
-  factory SceneBasicSplash.create(String name, World world) {
-    SceneBasicSplash scene = SceneBasicSplash()
+  factory NodeBasicSplash.create(String name, World world) {
+    NodeBasicSplash scene = NodeBasicSplash()
       ..initialize(name)
-      ..build(world)
-      ..initializeScene(
-          core.SceneStates.sceneOffStage, core.SceneStates.sceneOffStage);
+      ..build(world);
     return scene;
   }
 
   void build(World world) {
     LayerBasicGame.create('Game Layer', world, this);
+  }
+
+  // --------------------------------------------------------
+  // Signals from NodeManager (NM) or other Nodes via NM
+  // --------------------------------------------------------
+  @override
+  void receiveSignal(core.NodeSignal signal) {
+    print('NodeBasicSplash receiveSignal: $name :: $signal');
+    super.receiveSignal(signal);
+  }
+
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
+  @override
+  void event() {
+    // TODO: implement event
+  }
+
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+
+  @override
+  void timing(double dt) {
+    // TODO: implement timing
   }
 }

@@ -36,4 +36,17 @@ class MySquareNode extends Node {
     // Finally call render incase the base Node want to decorate/adorn it.
     super.render(model, canvas);
   }
+
+  @override
+  void event() {
+    // TODO: implement event
+  }
+
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+  @override
+  void timing(double dt) {
+    // TODO: implement timing
+  }
 }

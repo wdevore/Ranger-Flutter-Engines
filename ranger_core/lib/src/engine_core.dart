@@ -9,12 +9,12 @@ enum EngineState {
 
 abstract class EngineCore {
   String? lastException;
-  EngineState running = EngineState.halted;
+  EngineState state = EngineState.halted;
 
   // ------- DEBUG -----------
   bool runOneLoop = false;
 
-  void boot();
+  void boot(String nodeName);
   void update(double dt);
   void render(Canvas canvas);
 

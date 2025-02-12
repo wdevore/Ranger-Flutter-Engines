@@ -18,7 +18,7 @@ class Engine extends EngineCore {
 
     try {
       e.configure();
-      e.world.begin();
+      e.world.construct();
     } on WorldException catch (exp) {
       e.lastException = exp.message;
       stdout.write('${e.lastException}\n');
@@ -28,18 +28,16 @@ class Engine extends EngineCore {
   }
 
   void configure() {
-    world.sceneGraph.configure();
+    world.nodeManager.configure();
   }
 
   /// [boot] is called after create() and as the last thing the engine
   /// does to start the game.
   @override
-  void boot() {
-    running = EngineState.running;
+  void boot(String nodeName) {
+    world.nodeManager.pushNode(nodeName);
 
-    var scenegraph = world.sceneGraph;
-
-    scenegraph.enter();
+    state = EngineState.running;
   }
 
   void end() {
@@ -53,21 +51,18 @@ class Engine extends EngineCore {
   @override
   void inputPanUpdate(DragUpdateDetails details) {}
 
+  /// Called by GamePainter.
   @override
   void update(double dt) {
-    world.sceneGraph.update(dt, 0.0);
+    world.nodeManager.update(dt, 0.0);
   }
 
   @override
   void render(Canvas canvas) {
-    // Once the last scene has exited the stage we stop running.
     try {
-      bool moreScenes = world.sceneGraph.visit(0.0, canvas);
-      if (!moreScenes) {
-        running = EngineState.exited;
-      }
+      world.nodeManager.visit(0.0, canvas);
     } on NodeException catch (e) {
-      running = EngineState.halted;
+      state = EngineState.halted;
       debugPrint('$e');
     }
   }

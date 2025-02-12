@@ -10,14 +10,14 @@ Engine _constructGame() {
   Engine engine = Engine.create('relativePath', 'overrides');
   World world = engine.world;
 
-  SceneBasicSplash splash = SceneBasicSplash.create('Splash', world);
-  world.push(splash);
+  NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
+  world.nodeManager.addNode(splash);
 
-  // Last scene pushed is the first to run.
-  SceneBasicBoot boot = SceneBasicBoot.create('Boot');
-  world.push(boot);
+  NodeBasicBoot boot = NodeBasicBoot.create('Boot', world.nodeManager);
+  world.nodeManager.addNode(boot);
 
-  engine.boot();
+  // The run stack needs at least 1 Node
+  engine.boot(boot.name);
 
   return engine;
 }

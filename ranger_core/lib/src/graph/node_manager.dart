@@ -1,31 +1,41 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 import '../exceptions.dart';
 import '../maths/matrix4.dart' as mat;
 import 'node.dart';
-import 'node_stack.dart';
-import 'scene.dart';
 import 'transform_stack_cached.dart';
 
-/// The node manager is basically the SceneGraph
+/// The [NodeManager] controls [Node] traversal.
+///
+/// Holds and manages the Nodes that represent the visual aspect of the Scene.
 class NodeManager {
   // Clear or render background. Some nodes take the entire render area
   // so clearing or render a background is wasteful.
   bool clearBackground = false;
 
-  late NodeStack stack;
+  // Matrix stack for recursive decent.
   late TransformStackCached transformStack;
+
+  // Nodes hold string keys rather than actual Nodes.
+  Map<String, Node> nodeMap = {};
+
+  // The stack is used for Nodes that push other nodes onto the stack.
+  // The Top is always render, so once a Node is pushed it is rendered.
+  ListQueue<Node> nodeStack = ListQueue();
+  bool popTheTop = false;
+
+  //      Underlay           stack Top              Overlay
+  Node? underlay;
+  Node? overlay;
+
+  // Some Nodes receive events that others don't, for example, a layer
+  // vs a leaf. Usually animations sending timing events.
   List<Node> timingTargets = [];
+
+  // Event targets are IO events.
   List<Node> eventTargets = [];
-
-  late Node root;
-  Node? scenes;
-
-  Node? nextScene;
-  Node? currentScene;
-
-  // projection *display.Projection
-  // viewport   *display.Viewport
 
   final mat.Matrix4 preM4 = mat.Matrix4.identity();
   final mat.Matrix4 postM4 = mat.Matrix4.identity();
@@ -35,7 +45,6 @@ class NodeManager {
   factory NodeManager.create() {
     NodeManager nm = NodeManager();
 
-    nm.stack = NodeStack.create();
     nm.transformStack = TransformStackCached.create();
 
     return nm;
@@ -46,152 +55,131 @@ class NodeManager {
     transformStack.initialize(identity);
   }
 
-  void enter() {
-    if (stack.isEmpty || stack.stack.length < 2) {
-      throw NodeException(
-          'begin: Not enough scenes to start engine. There must be 2 or more');
+  // Called by GamePainter.paint() -> Engine.update()
+  void update(double msPerUpdate, double secPerUpdate) {
+    // Order is irrelevant.
+    underlay?.update(msPerUpdate);
+
+    // Iterate the Stack
+    for (var node in nodeStack) {
+      node.update(msPerUpdate);
     }
 
-    // The currentScene is the Incoming scene.
-    currentScene = stack.pop();
-    if (currentScene == null) {
-      throw NodeException('begin: No current scene.');
+    // We can't pop a node while in the "for" above, so we capture for popping.
+    if (popTheTop) {
+      pop();
+      popTheTop = false; // Make sure we don't pop again.
     }
-    enterScene(currentScene!);
 
-    // We need to set next-scene to the Top incase the game
-    // starts with only two scenes.
-    nextScene = stack.top();
-
-    scenes = root.getChildByName('Scenes');
+    overlay?.update(msPerUpdate);
   }
 
-  bool visit(double interpolation, Canvas canvas) {
-    transformStack.save();
-
-    // Up to two Scene Nodes can run at a time: Outgoing and Incoming.
-    var visitState = continueVisit(interpolation, canvas);
-
-    transformStack.restore();
-
-    return visitState; // continue to draw.
+  // --------------------------------------------------------------------------
+  // Map and Stack
+  // --------------------------------------------------------------------------
+  void addNode(Node node) {
+    nodeMap[node.name] = node;
   }
 
-  bool continueVisit(double interpolation, Canvas canvas) {
-    if (currentScene != null && currentScene is! Scene) {
-      throw NodeException('continueVisit: Current Scene node is not a Scene.');
+  void removeNode(String name) {
+    if (nodeMap.containsKey(name)) {
+      nodeMap.remove(name);
     }
+  }
 
-    if (scenes == null) {
-      throw NodeException('continueVisit: scene collection is null');
+  void pushNode(String name) {
+    Node? node = nodeMap[name];
+    if (node != null) {
+      nodeStack.addFirst(node);
     }
+  }
 
-    var currentState = (currentScene as Scene).currentState;
+  void pop() => nodeStack.removeFirst();
+  Node get top => nodeStack.first;
 
-    switch (currentState) {
-      case SceneStates.sceneOffStage:
-        // The current scene is off stage which means we need to tell it
-        // to begin transitioning onto the stage.
-        scenes!.insertShift(currentScene!);
+  bool isNodeOnStage(Node node) => node.id == top.id;
 
-        // Notify the current scene it should start to transition onto the stage.
-        setSceneState(
-            currentScene as Scene, SceneStates.sceneTransitionStartIn);
-        break;
-      case SceneStates.sceneTransitioningIn:
-        // The currentScene wants to transition onto the stage.
-
-        // enterScene(nextScene!);
-
-        break;
-      case SceneStates.sceneTransitionStartOut:
-        // The current scene wants to transition off the stage.
-        // Notify it that it can do so.
-        setSceneState(
-            currentScene as Scene, SceneStates.sceneTransitionStartOut);
-
-        // At the same time we need to tell the next scene (if there is one) that it can
-        // start transitioning onto the stage.
-        if (stack.isEmpty) {
-          // fmt.Println("---- Stack empty ------")
-          nextScene = null;
+  // --------------------------------------------------------------------------
+  // Signals between Nodes and NodeManager
+  // --------------------------------------------------------------------------
+  /// Receive a signal sent from a Node. Called during an update().
+  void sendSignal(Node node, NodeSignal signal) {
+    switch (signal) {
+      case NodeSignal.requestNodeLeaveStage:
+        // Node requested to leave stage.
+        // Check if on stage first.
+        if (isNodeOnStage(node)) {
+          popTheTop = true;
+          // nodeTopPop = top;
+          // Send signal to currently active Node
+          node.receiveSignal(NodeSignal.leaveStageGranted);
+          // Send signal to the next Node to activate, and that will be top+1
+          nodeStack.elementAt(1).receiveSignal(NodeSignal.nodeMovedToStage);
         } else {
-          if (nextScene != null && nextScene is! Scene) {
-            throw NodeException(
-                'continueVisit: Next Scene node is not a Scene.');
-          }
-          nextScene = stack.pop();
-
-          enterScene(nextScene!);
-
-          setSceneState(nextScene as Scene, SceneStates.sceneTransitionStartIn);
-          scenes!.insertShift(nextScene!);
+          throw NodeException(
+              'NodeManager: attempt to remove Node from stage that wasn\'t at the top => $node');
         }
-        break;
-      case SceneStates.sceneExitedStage:
-        // The current scene has finished leaving the stage.
-        // TODO replace "pooled" with "cleanup/dispose"
-        var pooled = exitScene(currentScene!); // Let it cleanup and exit.
-
-        if (pooled) {
-          // Returning currentScene to pool.
-        }
-
-        scenes!.removeLast();
-
-        // Promote next-scene to current-scene
-        currentScene = nextScene;
-        // This isn't actually needed but it is good form.
-        nextScene = null;
         break;
       default:
         break;
     }
-
-    // -------------------------------------------------------
-    // Now that visible Scene(s) have been attached/detached to the main Scene
-    // node we can Visit the "Root" node.
-    // -------------------------------------------------------
-    Node.visit(root, transformStack, interpolation, canvas);
-
-    // When the current scene is the last scene to exit the stage
-    // then the game is over.
-    return currentScene != null;
   }
 
-  /// [end] cleans up NodeManager by clearing the stack and calling all Exits
-  void end() {
-    // Dump the stack
-    print("End: Cleaning up scene stack.");
-    if (!stack.isEmpty) {
-      var pn = stack.top();
-
-      while (pn != null) {
-        exitScene(pn);
-        pn = stack.pop();
-      }
+  // --------------------------------------------------------------------------
+  // Recursive (render)
+  // --------------------------------------------------------------------------
+  // Called by GamePainter.paint() -> Engine.render.
+  void visit(double interpolation, Canvas canvas) {
+    // visit Underlay
+    if (underlay != null) {
+      transformStack.save();
+      Node.visit(underlay!, transformStack, interpolation, canvas);
+      transformStack.restore();
     }
 
-    eventTargets = [];
+    transformStack.save();
+    Node.visit(top, transformStack, interpolation, canvas);
+    transformStack.restore();
+
+    // visit Overlay
+    if (overlay != null) {
+      transformStack.save();
+      Node.visit(overlay!, transformStack, interpolation, canvas);
+      transformStack.restore();
+    }
   }
 
-  /// Push node onto the top
-  void pushNode(Node node) {
-    stack.push(node);
+  /// [close] cleans up NodeManager by clearing the stack and clearing targets.
+  void close() {
+    eventTargets.clear();
+    timingTargets.clear();
   }
 
-  void setSceneState(Scene scene, SceneStates state) {
-    scene.notify(state);
+  // --------------------------------------------------------------------------
+  // Event targets (IO)
+  // --------------------------------------------------------------------------
+  void event() {
+    for (var target in eventTargets) {
+      target.event();
+    }
   }
 
-// --------------------------------------------------------------------------
-// Timing
-// --------------------------------------------------------------------------
-  void update(double msPerUpdate, double secPerUpdate) {
+  void registerEvent(Node target) {
+    eventTargets.add(target);
+  }
+
+  void unRegisterEvent(Node target) {
+    eventTargets.remove(target);
+  }
+
+  // --------------------------------------------------------------------------
+  // Timing targets (animations)
+  // --------------------------------------------------------------------------
+  void timing(double dt) {
     // TODO add visibility code so that updates are not called on objects that
     // are visible.
     for (var target in timingTargets) {
-      target.update(msPerUpdate, secPerUpdate);
+      target.timing(dt);
     }
   }
 
@@ -201,44 +189,5 @@ class NodeManager {
 
   void unRegisterTarget(Node target) {
     timingTargets.remove(target);
-  }
-
-  // -----------------------------------------------------
-  // Scene lifecycles
-  // -----------------------------------------------------
-  void enterScene(Node node) {
-    node.enterScene(this);
-
-    for (var child in node.children) {
-      enterNode(child);
-    }
-  }
-
-  void enterNode(Node node) {
-    enterNode(node);
-
-    for (var child in node.children) {
-      enterNode(child);
-    }
-  }
-
-  bool exitScene(Node node) {
-    var pooled = false;
-
-    pooled = node.exitScene(this);
-
-    for (var child in node.children) {
-      exitNode(child);
-    }
-
-    return pooled;
-  }
-
-  void exitNode(Node node) {
-    node.exitNode(this);
-
-    for (var child in node.children) {
-      exitNode(child);
-    }
   }
 }
