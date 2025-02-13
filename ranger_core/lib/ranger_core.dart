@@ -34,3 +34,4 @@ export 'src/maths/matrix4.dart' show Matrix4;
 export 'src/maths/vector.dart' show Vector;
 export 'src/maths/vector3.dart' show Vector3;
 export 'src/maths/velocity.dart' show Velocity;
+export 'src/extras/misc/delay.dart' show Delay;

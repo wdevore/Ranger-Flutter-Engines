@@ -110,11 +110,12 @@ class NodeManager {
         // Check if on stage first.
         if (isNodeOnStage(node)) {
           popTheTop = true;
-          // nodeTopPop = top;
           // Send signal to currently active Node
           node.receiveSignal(NodeSignal.leaveStageGranted);
-          // Send signal to the next Node to activate, and that will be top+1
-          nodeStack.elementAt(1).receiveSignal(NodeSignal.nodeMovedToStage);
+          if (nodeStack.length > 1) {
+            // Send signal to the next Node to activate, and that will be top+1
+            nodeStack.elementAt(1).receiveSignal(NodeSignal.nodeMovedToStage);
+          }
         } else {
           throw NodeException(
               'NodeManager: attempt to remove Node from stage that wasn\'t at the top => $node');

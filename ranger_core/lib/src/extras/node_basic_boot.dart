@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
+
+import 'package:ranger_core/ranger_core.dart' as core;
 import '../graph/node.dart';
 import '../graph/node_manager.dart';
+import 'misc/delay.dart';
 
 enum BootState {
   /// Node maintains its current state (i.e. running)
@@ -13,8 +17,9 @@ enum BootState {
 /// This boot Node currently does nothing. It's as plain as it gets.
 class NodeBasicBoot extends Node {
   BootState customeState = BootState.maintain;
+  Paint baseBackgroundColor = Paint()..color = Colors.indigo;
 
-  double timeCnt = 0.0;
+  Delay delay = Delay.create(1000.0);
 
   NodeBasicBoot();
 
@@ -43,6 +48,12 @@ class NodeBasicBoot extends Node {
     // TODO: implement event
   }
 
+  @override
+  void render(core.Matrix4 model, Canvas canvas) {
+    canvas.drawPaint(baseBackgroundColor);
+    super.render(model, canvas);
+  }
+
   // --------------------------------------------------------------------------
   // Timing targets (animations)
   // --------------------------------------------------------------------------
@@ -51,22 +62,17 @@ class NodeBasicBoot extends Node {
   void update(double dt) {
     switch (customeState) {
       case BootState.delaying:
-        timeCnt += dt;
-        if (timeCnt > 2000.0) {
+        if (delay.expired(dt)) {
           customeState = BootState.sendSignal;
         }
         break;
       case BootState.sendSignal:
+        // Boot simply exits the stage immediately. The NM will immediately
+        // pop this node from the Top which inactivates it.
         sendSignal(NodeSignal.requestNodeLeaveStage);
         break;
       default:
-
-        // Boot simply exits the stage immediately. The NM will immediately
-        // pop this node from the Top which inactivates it.
-        // state = NodeState.waitSignal; // No need for this
         break;
     }
-    // TODO: implement timing
-    // sendSignal(NodeSignal.requestNodeLeaveStage);
   }
 }
