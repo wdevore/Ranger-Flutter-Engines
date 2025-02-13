@@ -11,10 +11,9 @@ Engine _constructGame() {
   World world = engine.world;
 
   NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
-  world.nodeManager.addNode(splash);
   // Preset Splash to replace NodeBasicBoot when boot exits.
-  // The alternative is that Splash pushes itself.
-  world.nodeManager.pushNode('Splash');
+  // Thus we add and push splash.
+  world.nodeManager.addPushNode(splash);
 
   NodeBasicBoot boot = NodeBasicBoot.create('Boot', world.nodeManager);
   world.nodeManager.addNode(boot);

@@ -81,9 +81,29 @@ class NodeManager {
     nodeMap[node.name] = node;
   }
 
-  void removeNode(String name) {
+  void addPushNode(Node node) {
+    addNode(node);
+    pushNode(node.name);
+  }
+
+  /// Removes Node from both Map and Stack.
+  Node? removeNode(String name) {
+    Node? node;
     if (nodeMap.containsKey(name)) {
-      nodeMap.remove(name);
+      node = nodeMap.remove(name);
+      popNode(node!);
+    }
+    return node;
+  }
+
+  void popNode(Node node) {
+    try {
+      if (nodeStack.contains(node)) {
+        // node = nodeStack.firstWhere((nod) => nod.name == node.name);
+        nodeStack.remove(node);
+      }
+    } on StateError catch (e) {
+      print(e.message);
     }
   }
 

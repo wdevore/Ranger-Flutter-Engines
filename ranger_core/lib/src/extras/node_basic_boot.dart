@@ -63,14 +63,15 @@ class NodeBasicBoot extends Node {
     switch (customeState) {
       case BootState.delaying:
         if (delay.expired(dt)) {
-          customeState = BootState.sendSignal;
+          // customeState = BootState.sendSignal;
+
+          // Boot simply exits the stage immediately. The NM will immediately
+          // pop this node from the Top which inactivates it.
+          sendSignal(NodeSignal.requestNodeLeaveStage);
         }
         break;
-      case BootState.sendSignal:
-        // Boot simply exits the stage immediately. The NM will immediately
-        // pop this node from the Top which inactivates it.
-        sendSignal(NodeSignal.requestNodeLeaveStage);
-        break;
+      // case BootState.sendSignal:
+      //   break;
       default:
         break;
     }
