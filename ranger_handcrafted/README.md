@@ -1,5 +1,5 @@
 # basic_gameloop
-This is bare minimum of building a game loop in flutter.
+This is bare minimum of building a game loop in flutter. Depends on ranger_core package.
 
 # range_flame
 A port of [Ranger-Go-IGE](https://github.com/wdevore/Ranger-Go-IGE/tree/master) to Flutter. It uses Flame engine.
