@@ -12,9 +12,12 @@ import 'shape.dart';
 ///
 /// The [Shape] is assigned an [id] when it is added to the [Atlas].
 class SquareShape extends Shape {
-  final Rect rect;
+  late Rect rect;
   Paint paint = Paint()
     ..color = Colors.lime
+    ..style = PaintingStyle.fill;
+  Paint paintAlt = Paint()
+    ..color = Colors.limeAccent
     ..style = PaintingStyle.fill;
 
   SquareShape(this.rect);
@@ -26,9 +29,16 @@ class SquareShape extends Shape {
 
   @override
   void draw(Canvas canvas) {
-    canvas.drawRect(
-      rect,
-      paint,
-    );
+    if (!collision) {
+      canvas.drawRect(
+        rect,
+        paint,
+      );
+    } else {
+      canvas.drawRect(
+        rect,
+        paintAlt,
+      );
+    }
   }
 }

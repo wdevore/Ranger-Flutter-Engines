@@ -1,20 +1,12 @@
 import 'dart:math';
 
+import 'geometry.dart';
 import 'point.dart';
 
-/// Ranger's device coordinate space is matched to the display which is
-/// Canvas:
-///
-///          ^ +Y
-///          |
-///          |
-///          |
-///          .--------> +X
-///     lower left
-///
 /// Rectangle is a square with behaviours.
+/// It matches [Canvas].
 ///
-///                    >           maxX, maxY
+///     minX,minY      >
 ///          .--------------------.
 ///          |        Top         |
 ///          |                    |
@@ -24,10 +16,10 @@ import 'point.dart';
 ///          |                    |
 ///          |      bottom        |
 ///          .--------------------.
-///     minX,minY      <
+///                     <     maxX, maxY
 ///
 ///
-class Rectangle {
+class Rectangle extends Geometry {
   double left = 0.0;
   double top = 0.0;
   double bottom = 0.0;
@@ -132,23 +124,57 @@ class Rectangle {
   /// [pointInside] checks point using left-top rule.
   ///
   /// Rule: Point is inside if on an top or left Edge and **NOT** on a bottom or right edge
+  @override
   bool pointInside(Point p) {
-    return p.x >= left && p.x < right && p.y >= bottom && p.y < top;
+    // Because the Canvas's +Y is downward the bottom is positive so the check is:
+    // y is < bottom and y is >= top.
+    return p.x >= left && p.x < right && p.y < bottom && p.y >= top;
+  }
+
+  @override
+  bool coordsInside(double x, double y) {
+    // print('$x >= $left && $x < $right && $y >= $bottom && $y < $top');
+    //  Canvas's device coordinate space is:
+    //        Top-Left
+    //         (0,0)
+    //           .--------> +X
+    //           |
+    //           |
+    //           |
+    //           v         Bottom-Right
+    //          +Y
+    //      Lower-Left
+    //
+    // If +Y is upward
+    // return x >= left && x < right && y >= bottom && y < top;
+    //
+    // Because the Canvas's +Y is downward the bottom is positive so the check is:
+    // y is < bottom and y is >= top.
+    return x >= left && x < right && y < bottom && y >= top;
   }
 
   /// [intersects] returns *true* if other (o) intersects this rectangle.
   bool intersects(Rectangle o) {
     return left <= o.right &&
         o.left <= right &&
-        bottom <= o.top &&
-        o.bottom <= top;
+        top <= o.bottom &&
+        o.top <= bottom;
+    // return left <= o.right &&
+    //     o.left <= right &&
+    //     bottom <= o.top &&
+    //     o.bottom <= top;
   }
 
   /// [contains] returns *true* if rectangle completely contains other (o).
   bool contains(Rectangle o) {
     return left <= o.left &&
         right >= o.right &&
-        top >= o.top &&
-        bottom <= o.bottom;
+        top <= o.top &&
+        bottom >= o.bottom;
+  }
+
+  @override
+  String toString() {
+    return 'LT: ($left,$top) RB: ($right,$bottom) [$width x $height]';
   }
 }

@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'engine_core.dart';
 
+/// Canvas's device coordinate space is:
+///
+///       Top-Left
+///        (0,0)
+///          .--------> +X
+///          |
+///          |
+///          |
+///          v         Bottom-Right
+///         +Y
+///     Lower-Left
+///
 class GamePainter extends CustomPainter {
   final EngineCore engine;
   bool running = true;
@@ -40,7 +52,7 @@ class GamePainter extends CustomPainter {
     if (!engine.runOneLoop) {
       if (engine.state == EngineState.running) {
         engine.update(dt); // Update is independent of visibility
-        engine.render(canvas);
+        engine.render(canvas, size);
       } else {
         running = false;
         if (engine.state == EngineState.halted) {

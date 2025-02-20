@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../extras/events/event.dart';
 import '../geometry/rectangle.dart';
 import '../maths/affinetransform.dart';
 import '../maths/matrix4.dart' as mat;
@@ -70,6 +71,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
     TransformStackCached stack,
     double interpolation,
     Canvas canvas,
+    Size size,
   ) {
     // Checking visibility here would cause any children that are visible
     // to not be rendered.
@@ -90,7 +92,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
     var model = stack.applyAffine(aft);
 
     // TODO add Atlas features for images
-    node.render(model, canvas);
+    node.render(model, canvas, size);
 
     // Some of the children may still be visible.
     // TODO add extra flag to choose if parent only or all children are visible
@@ -104,7 +106,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
         // TODO add filter.visit(stack, interpolation)
       } else {
         // Recurse down the tree.
-        visit(node, stack, interpolation, canvas);
+        visit(node, stack, interpolation, canvas, size);
       }
     }
     // }
@@ -137,7 +139,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
   ///
   /// You must **override** this in your custom [Node] if your [Node]
   /// needs to perform custom rendering.
-  void render(mat.Matrix4 model, Canvas canvas) {}
+  void render(mat.Matrix4 model, Canvas canvas, Size size) {}
 
   void setPosition(double x, double y) {
     position.x = x;
@@ -201,7 +203,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
   // --------------------------------------------------------------------------
   // Event targets (IO)
   // --------------------------------------------------------------------------
-  void event();
+  void event(Event input);
 
   // --------------------------------------------------------------------------
   // Timing targets (animations)

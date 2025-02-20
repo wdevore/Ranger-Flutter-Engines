@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 
 import '../exceptions.dart';
+import '../extras/events/event.dart';
 import '../maths/matrix4.dart' as mat;
 import 'node.dart';
 import 'transform_stack_cached.dart';
@@ -31,9 +32,7 @@ class NodeManager {
   Node? overlay;
 
   // Some Nodes receive events that others don't, for example, a layer
-  // vs a leaf. Usually animations sending timing events.
-  List<Node> timingTargets = [];
-
+  // vs a leaf.
   // Event targets are IO events.
   List<Node> eventTargets = [];
 
@@ -150,22 +149,22 @@ class NodeManager {
   // Recursive (render)
   // --------------------------------------------------------------------------
   // Called by GamePainter.paint() -> Engine.render.
-  void visit(double interpolation, Canvas canvas) {
+  void visit(double interpolation, Canvas canvas, Size size) {
     // visit Underlay
     if (underlay != null) {
       transformStack.save();
-      Node.visit(underlay!, transformStack, interpolation, canvas);
+      Node.visit(underlay!, transformStack, interpolation, canvas, size);
       transformStack.restore();
     }
 
     transformStack.save();
-    Node.visit(top, transformStack, interpolation, canvas);
+    Node.visit(top, transformStack, interpolation, canvas, size);
     transformStack.restore();
 
     // visit Overlay
     if (overlay != null) {
       transformStack.save();
-      Node.visit(overlay!, transformStack, interpolation, canvas);
+      Node.visit(overlay!, transformStack, interpolation, canvas, size);
       transformStack.restore();
     }
   }
@@ -173,42 +172,23 @@ class NodeManager {
   /// [close] cleans up NodeManager by clearing the stack and clearing targets.
   void close() {
     eventTargets.clear();
-    timingTargets.clear();
   }
 
   // --------------------------------------------------------------------------
   // Event targets (IO)
   // --------------------------------------------------------------------------
-  void event() {
+  /// Called from various engine inputs methods, for example, inputMouseMove().
+  void event(Event input) {
     for (var target in eventTargets) {
-      target.event();
+      target.event(input);
     }
   }
 
-  void registerEvent(Node target) {
+  void registerForEvents(Node target) {
     eventTargets.add(target);
   }
 
-  void unRegisterEvent(Node target) {
+  void unRegisterForEvents(Node target) {
     eventTargets.remove(target);
-  }
-
-  // --------------------------------------------------------------------------
-  // Timing targets (animations)
-  // --------------------------------------------------------------------------
-  void timing(double dt) {
-    // TODO add visibility code so that updates are not called on objects that
-    // are visible.
-    for (var target in timingTargets) {
-      target.timing(dt);
-    }
-  }
-
-  void registerTarget(Node target) {
-    timingTargets.add(target);
-  }
-
-  void unRegisterTarget(Node target) {
-    timingTargets.remove(target);
   }
 }

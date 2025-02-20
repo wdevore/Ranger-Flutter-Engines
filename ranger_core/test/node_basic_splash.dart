@@ -1,3 +1,4 @@
+import 'package:ranger_core/src/extras/events/event.dart';
 import 'package:ranger_core/src/graph/node.dart';
 
 import 'layer_basic_game.dart';
@@ -29,7 +30,7 @@ class NodeBasicSplash extends Node {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 

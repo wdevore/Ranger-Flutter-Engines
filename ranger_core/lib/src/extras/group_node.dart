@@ -1,4 +1,5 @@
 import '../graph/node.dart';
+import 'events/event.dart';
 
 /// [GroupNode] is a non-rendering node meant to contain children only.
 class GroupNode extends Node {
@@ -15,7 +16,7 @@ class GroupNode extends Node {
   }
 
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 

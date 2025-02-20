@@ -57,9 +57,9 @@ class Engine extends EngineCore {
   }
 
   @override
-  void render(Canvas canvas) {
+  void render(Canvas canvas, Size size) {
     try {
-      world.nodeManager.visit(0.0, canvas);
+      world.nodeManager.visit(0.0, canvas, size);
     } on NodeException catch (e) {
       state = EngineState.halted;
       debugPrint('$e');

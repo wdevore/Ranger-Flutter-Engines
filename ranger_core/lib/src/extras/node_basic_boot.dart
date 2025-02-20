@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 import '../graph/node.dart';
 import '../graph/node_manager.dart';
+import 'events/event.dart';
 import 'misc/delay.dart';
 
 enum BootState {
@@ -44,14 +45,14 @@ class NodeBasicBoot extends Node {
 
   // Called by NodeManager
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 
   @override
-  void render(core.Matrix4 model, Canvas canvas) {
+  void render(core.Matrix4 model, Canvas canvas, Size size) {
     canvas.drawPaint(baseBackgroundColor);
-    super.render(model, canvas);
+    super.render(model, canvas, size);
   }
 
   // --------------------------------------------------------------------------

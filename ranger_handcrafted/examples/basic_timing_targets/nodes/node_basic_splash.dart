@@ -9,6 +9,7 @@ class NodeBasicSplash extends core.Node {
   factory NodeBasicSplash.create(String name, World world) {
     NodeBasicSplash scene = NodeBasicSplash()
       ..initialize(name)
+      ..nodeMan = world.nodeManager
       ..build(world);
     return scene;
   }
@@ -29,7 +30,7 @@ class NodeBasicSplash extends core.Node {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   @override
-  void event() {
+  void event(core.Event event) {
     // TODO: implement event
   }
 

@@ -1,3 +1,4 @@
+import 'package:ranger_core/src/extras/events/event.dart';
 import 'package:ranger_core/src/graph/node.dart';
 
 import 'my_square_node.dart';
@@ -26,7 +27,7 @@ class LayerBasicGame extends Node {
   }
 
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 

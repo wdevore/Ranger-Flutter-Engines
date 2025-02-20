@@ -59,10 +59,10 @@ class Engine extends EngineCore {
   void inputPanUpdate(DragUpdateDetails details) {}
 
   @override
-  void render(Canvas canvas) {
+  void render(Canvas canvas, Size size) {
     // Once the last scene has exited the stage we stop running.
     try {
-      world.nodeManager.visit(0.0, canvas);
+      world.nodeManager.visit(0.0, canvas, size);
     } on NodeException catch (e) {
       state = EngineState.halted;
       debugPrint('$e');

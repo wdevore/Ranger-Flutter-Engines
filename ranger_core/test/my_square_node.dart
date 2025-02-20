@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ranger_core/src/extras/events/event.dart';
 import 'package:ranger_core/src/extras/shapes/atlas.dart';
 import 'package:ranger_core/src/extras/shapes/square_shape.dart';
 import 'package:ranger_core/src/graph/node.dart';
@@ -32,13 +33,13 @@ class MySquareNode extends Node {
   }
 
   @override
-  void render(maths.Matrix4 model, Canvas canvas) {
+  void render(maths.Matrix4 model, Canvas canvas, Size size) {
     // Finally call render incase the base Node want to decorate/adorn it.
-    super.render(model, canvas);
+    super.render(model, canvas, size);
   }
 
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 

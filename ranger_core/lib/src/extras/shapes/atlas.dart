@@ -30,7 +30,7 @@ class Atlas {
       // The top-left corner is:
       //    TL
       //   (0,0) <--- rotation is about this point
-      //     .---------------.
+      //     .---------------.--> +X
       //     |       |       |
       //     |       |       |
       //     |-------.       | H
@@ -38,7 +38,9 @@ class Atlas {
       //     |               |
       //     |               |
       //     .---------------.(w,h) = BR
-      //             W
+      //     |
+      //     v
+      //    +Y       W
       //
       // rect = Rect.fromLTWH(
       //   0.0,
@@ -52,11 +54,11 @@ class Atlas {
       //        .--------........
       //        |       |       .
       //        |       |       .
-      //        |-------.       . H
-      //        .        BR  <--.-- rotation is about this point
+      //        |-------.(0,0)  . H
+      //        .        \      .
+      //        .         \_________ rotation is about this point
       //        .               .
-      //        .               .
-      //        ...............-.(w,h)
+      //        ...............-.(w,h) BR
       //                W
       rect = Rect.fromLTWH(
         -0.5,

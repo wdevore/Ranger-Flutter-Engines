@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../extras/events/event.dart';
 import '../maths/matrix4.dart' as mat;
 import 'node.dart';
 
@@ -15,12 +16,12 @@ final class StandardNode extends Node {
   }
 
   @override
-  void render(mat.Matrix4 model, Canvas canvas) {
+  void render(mat.Matrix4 model, Canvas canvas, Size size) {
     // TODO: implement draw
   }
 
   @override
-  void event() {
+  void event(Event event) {
     // TODO: implement event
   }
 

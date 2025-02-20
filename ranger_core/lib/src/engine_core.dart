@@ -16,7 +16,7 @@ abstract class EngineCore {
 
   void boot(String nodeName);
   void update(double dt);
-  void render(Canvas canvas);
+  void render(Canvas canvas, Size size);
 
   void inputMouseMove(PointerHoverEvent event);
   void inputPanDown(DragDownDetails details);

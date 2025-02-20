@@ -8,6 +8,7 @@ import 'world.dart';
 
 class Engine extends EngineCore {
   late World world;
+  final MouseEvent mouseEvent = MouseEvent();
 
   Engine();
 
@@ -44,12 +45,28 @@ class Engine extends EngineCore {
     world.end();
   }
 
+  /// Called by GamePainter.
   @override
-  void inputMouseMove(PointerHoverEvent event) {}
+  void inputMouseMove(PointerHoverEvent event) {
+    mouseEvent
+      ..position = event.position
+      ..delta = event.delta;
+    world.nodeManager.event(mouseEvent);
+
+    // print('mousemove: ${event.position} : ${event.delta}');
+  }
+
+  /// Called by GamePainter.
   @override
-  void inputPanDown(DragDownDetails details) {}
+  void inputPanDown(DragDownDetails details) {
+    print('pandown: $details');
+  }
+
+  /// Called by GamePainter.
   @override
-  void inputPanUpdate(DragUpdateDetails details) {}
+  void inputPanUpdate(DragUpdateDetails details) {
+    print('pandrag: $details');
+  }
 
   /// Called by GamePainter.
   @override
@@ -58,9 +75,11 @@ class Engine extends EngineCore {
   }
 
   @override
-  void render(Canvas canvas) {
+  void render(Canvas canvas, Size size) {
     try {
-      world.nodeManager.visit(0.0, canvas);
+      world
+        ..deviceSize = size
+        ..nodeManager.visit(0.0, canvas, size);
     } on NodeException catch (e) {
       state = EngineState.halted;
       debugPrint('$e');

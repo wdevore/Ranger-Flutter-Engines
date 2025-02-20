@@ -6,10 +6,14 @@ import '../world.dart';
 class MySquareNode extends core.Node {
   late Paint paint = Paint();
   late core.SquareShape shape;
+
   late World world;
   late core.Renderer renderer;
+
   double angle = 0.0;
   final double angleRate = 0.01; // radians per (1/framerate)
+
+  final core.Point localPosition = core.Point.create();
 
   MySquareNode();
 
@@ -24,6 +28,7 @@ class MySquareNode extends core.Node {
     MySquareNode my = MySquareNode()
       ..initialize(name)
       ..parent = parent
+      ..nodeMan = world.nodeManager
       ..world = world
       ..angle = initialAngle
       ..paint.color = Colors.white; // default of "white";
@@ -36,12 +41,26 @@ class MySquareNode extends core.Node {
 
   void build(core.Atlas atlas) {
     // First create a shape that will be renderered.
-    core.SquareShape shape =
-        core.SquareShape.create(core.Atlas.createSquareRect(), name);
+    Rect rect = core.Atlas.createSquareRect();
+    shape = core.SquareShape.create(rect, name);
     // Add to Atlas for cache usage
     atlas.addShape(shape);
+
+    // Sync bounds to rectangle.
+    //
+    bounds
+      ..top = rect.top
+      ..left = rect.left
+      ..bottom = rect.bottom
+      ..right = rect.right
+      ..width = rect.width
+      ..height = rect.height;
+
     // Now create a renderer using that shape.
     renderer = core.SquareRenderer.create(shape);
+
+    // We want input events from Mouse
+    world.nodeManager.registerForEvents(this);
   }
 
   // --------------------------------------------------------------------------
@@ -56,15 +75,35 @@ class MySquareNode extends core.Node {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   @override
-  void event() {
-    // TODO: implement event
+  void event(core.Event event) {
+    switch (event) {
+      case core.MouseEvent e:
+        // This gets the local-space coords of the rectangle node.
+        if (e.position != null) {
+          core.Spaces.mapDeviceToNode(
+            world,
+            e.position!.dx.toInt(),
+            e.position!.dy.toInt(),
+            this,
+            localPosition,
+          );
+          // print('local: $localPosition => $bounds');
+          // print('${e.position} => local: $localPosition');
+
+          shape.collision =
+              bounds.coordsInside(localPosition.x, localPosition.y);
+        }
+        break;
+      default:
+        throw UnimplementedError('Unknown Event type');
+    }
   }
 
   @override
-  void render(core.Matrix4 model, Canvas canvas) {
+  void render(core.Matrix4 model, Canvas canvas, Size size) {
     renderer.render(canvas, this);
     // Finally call render incase the base Node wants to decorate/adorn it.
-    super.render(model, canvas);
+    super.render(model, canvas, size);
   }
 
   @override
