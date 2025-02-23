@@ -1,12 +1,7 @@
 import 'package:ranger_core/ranger_core.dart' as core;
 
 /// [World] is contained within the [Engine]
-class World {
-  late String relativePath;
-  late core.NodeManager nodeManager;
-
-  final core.Atlas atlas = core.Atlas();
-
+class World extends core.WorldCore {
   World();
 
   factory World.create(String relativePath) {
@@ -20,6 +15,7 @@ class World {
   }
 
   /// [construct] is called by the Engine during Construct().
+  @override
   void construct() {
     // Create Root first and above all (pun intended) do it NOW! ;-)
     // root = core.GroupNode.create('Root', null);
@@ -33,12 +29,8 @@ class World {
     // sceneGraph.root = root;
   }
 
+  @override
   void end() {
     nodeManager.close();
-  }
-
-  void routeEvents(core.Events event) {
-    // TODO add routing of events
-    // NodeManager().RouteEvents(event);
   }
 }

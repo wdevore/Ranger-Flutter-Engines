@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 
-import '../world.dart';
-
 class MySquareNode extends core.Node {
   late Paint paint = Paint();
   late core.SquareShape shape;
 
-  late World world;
+  late core.WorldCore world;
   late core.Renderer renderer;
 
   double angle = 0.0;
@@ -22,7 +20,7 @@ class MySquareNode extends core.Node {
   factory MySquareNode.create(
     String name,
     double initialAngle,
-    World world,
+    core.WorldCore world,
     core.Node parent,
   ) {
     MySquareNode my = MySquareNode()

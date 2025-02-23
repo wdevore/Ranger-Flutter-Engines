@@ -13,13 +13,12 @@ class MySquareNode extends Node {
 
   MySquareNode();
 
-  // [parent] is of type Node not "Node?" because lead nodes always have a
-  // parent.
+  // [parent] is of type Node not "Node?" because leaf nodes always have a parent.
   factory MySquareNode.create(String name, World world, Node parent) {
     MySquareNode my = MySquareNode()
       ..initialize(name)
       ..parent = parent
-      ..paint.color = Colors.white; // default of "white";
+      ..paint.color = Colors.white; // default of "white"
 
     my.parent?.children.addLast(my);
     my.build(world.atlas);
@@ -41,13 +40,5 @@ class MySquareNode extends Node {
   @override
   void event(Event event) {
     // TODO: implement event
-  }
-
-  // --------------------------------------------------------------------------
-  // Timing targets (animations)
-  // --------------------------------------------------------------------------
-  @override
-  void timing(double dt) {
-    // TODO: implement timing
   }
 }

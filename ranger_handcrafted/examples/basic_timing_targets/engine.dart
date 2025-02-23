@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ranger_core/ranger_core.dart';
+import 'package:ranger_core/ranger_core.dart' as core;
 
 import 'world.dart';
 
-class Engine extends EngineCore {
-  late World world;
-  final MouseEvent mouseEvent = MouseEvent();
+class Engine extends core.EngineCore {
+  late core.WorldCore world;
+  final core.MouseEvent mouseEvent = core.MouseEvent();
 
   Engine();
 
@@ -20,7 +20,7 @@ class Engine extends EngineCore {
     try {
       e.configure();
       e.world.construct();
-    } on WorldException catch (exp) {
+    } on core.WorldException catch (exp) {
       e.lastException = exp.message;
       stdout.write('${e.lastException}\n');
     }
@@ -38,7 +38,7 @@ class Engine extends EngineCore {
   void boot(String nodeName) {
     world.nodeManager.pushNode(nodeName);
 
-    state = EngineState.running;
+    state = core.EngineState.running;
   }
 
   void end() {
@@ -80,8 +80,8 @@ class Engine extends EngineCore {
       world
         ..deviceSize = size
         ..nodeManager.visit(0.0, canvas, size);
-    } on NodeException catch (e) {
-      state = EngineState.halted;
+    } on core.NodeException catch (e) {
+      state = core.EngineState.halted;
       debugPrint('$e');
     }
   }

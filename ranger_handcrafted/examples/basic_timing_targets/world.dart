@@ -2,8 +2,6 @@ import 'package:ranger_core/ranger_core.dart' as core;
 
 /// [World] is contained within the [Engine]
 class World extends core.WorldCore {
-  final core.Atlas atlas = core.Atlas();
-
   World();
 
   factory World.create(String relativePath) {

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../shapes/shape.dart';
 import 'renderer.dart';
 
-class SquareRenderer extends Renderer {
+class PathRenderer extends Renderer {
   final Shape shape;
 
-  SquareRenderer(this.shape);
+  PathRenderer(this.shape);
 
-  factory SquareRenderer.create(Shape shape) => SquareRenderer(shape);
+  factory PathRenderer.create(Shape shape) => PathRenderer(shape);
 
   @override
   void draw(Canvas canvas) {

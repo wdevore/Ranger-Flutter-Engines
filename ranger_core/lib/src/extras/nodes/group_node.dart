@@ -1,5 +1,5 @@
-import '../graph/node.dart';
-import 'events/event.dart';
+import '../../graph/node.dart';
+import '../events/event.dart';
 
 /// [GroupNode] is a non-rendering node meant to contain children only.
 class GroupNode extends Node {
