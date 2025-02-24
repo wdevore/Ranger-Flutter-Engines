@@ -21,7 +21,7 @@ class MySquareNode extends core.Node {
     String name,
     double initialAngle,
     core.WorldCore world,
-    core.Node parent,
+    core.Node? parent,
   ) {
     MySquareNode my = MySquareNode()
       ..initialize(name)

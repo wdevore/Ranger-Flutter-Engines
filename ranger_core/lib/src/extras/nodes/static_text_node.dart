@@ -18,7 +18,7 @@ class StaticTextNode extends Node {
 
   StaticTextNode();
 
-  factory StaticTextNode.create(String text, WorldCore world, Node parent,
+  factory StaticTextNode.create(String text, WorldCore world, Node? parent,
       {double charSpacing = 1.0}) {
     StaticTextNode stn = StaticTextNode()
       ..initialize(text)

@@ -4,10 +4,19 @@ import 'package:flutter/material.dart';
 import 'world_core.dart';
 
 enum EngineState {
+  /// The game should construct itself in this state.
   constructing,
+
+  /// In this state the game should stablize so that timing is stable.
   stabilizing,
+
+  /// This is now running
   running,
+
+  /// The game halted immediately. Not good.
   halted,
+
+  /// The game exited gracefully.
   exited,
 }
 
@@ -20,6 +29,8 @@ abstract class EngineCore {
   bool runOneLoop = false;
 
   void boot(String nodeName);
+
+  /// This is where the game is constructed/built
   void construct();
   void update(double dt);
   void render(Canvas canvas, Size size);

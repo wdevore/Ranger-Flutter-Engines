@@ -88,11 +88,19 @@ class Engine extends core.EngineCore {
     NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
     // Preset Splash to replace NodeBasicBoot when boot exits.
     // Thus we add and push splash.
-    world.nodeManager.addPushNode(splash);
+    var nm = world.nodeManager;
 
-    core.NodeBasicBoot basicBoot =
-        core.NodeBasicBoot.create('Boot', world.nodeManager);
-    world.nodeManager.addNode(basicBoot);
+    nm.addPushNode(splash);
+
+    core.NodeBasicBoot basicBoot = core.NodeBasicBoot.create('Boot', nm);
+    nm.addNode(basicBoot);
+
+    // Add FPS to overlay
+    double scale = 15.0;
+    nm.overlay =
+        core.StaticTextNode.create('ABBa', world, null, charSpacing: 0.5);
+    nm.overlay!.setPosition(scale, world.deviceSize.height - scale);
+    nm.overlay!.setScale(scale);
 
     // The run stack needs at least 1 Node
     boot(basicBoot.name);

@@ -28,6 +28,8 @@ This is a basic gameloop enhanced for Ranger.
   - Keyboard
 - Fonts
   - Vector  <=== **WORKING**
+    - Static text
+    - Dynamic text
 - Audio
 - *Textures* (optional)
 

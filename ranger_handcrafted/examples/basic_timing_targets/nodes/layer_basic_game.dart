@@ -5,7 +5,6 @@ import 'my_square_node.dart';
 class LayerBasicGame extends core.Node {
   late MySquareNode squareNode;
   late core.WorldCore world;
-  late core.StaticTextNode textNode;
 
   LayerBasicGame();
 
@@ -28,12 +27,6 @@ class LayerBasicGame extends core.Node {
     squareNode = MySquareNode.create('Square', 45.0, world, this);
     squareNode.setPosition(300.0, 200.0);
     squareNode.setScale(100.0);
-
-    double scale = 15.0;
-    textNode =
-        core.StaticTextNode.create('ABBa', world, this, charSpacing: 0.5);
-    textNode.setPosition(scale, world.deviceSize.height - scale);
-    textNode.setScale(scale);
   }
 
   // --------------------------------------------------------------------------
