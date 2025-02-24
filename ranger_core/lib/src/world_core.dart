@@ -11,7 +11,7 @@ abstract class WorldCore {
 
   final Matrix4 viewSpace = Matrix4.identity();
   final Matrix4 invViewSpace = Matrix4.identity();
-  Size? deviceSize;
+  late Size deviceSize;
 
   /// [construct] is called by the Engine during Construct().
   void construct();

@@ -4,8 +4,7 @@ import 'package:ranger_core/src/extras/shapes/atlas.dart';
 import 'package:ranger_core/src/extras/shapes/square_shape.dart';
 import 'package:ranger_core/src/graph/node.dart';
 import 'package:ranger_core/src/maths/matrix4.dart' as maths;
-
-import 'world.dart';
+import 'package:ranger_core/src/world_core.dart';
 
 class MySquareNode extends Node {
   late Paint paint = Paint();
@@ -14,7 +13,7 @@ class MySquareNode extends Node {
   MySquareNode();
 
   // [parent] is of type Node not "Node?" because leaf nodes always have a parent.
-  factory MySquareNode.create(String name, World world, Node parent) {
+  factory MySquareNode.create(String name, WorldCore world, Node parent) {
     MySquareNode my = MySquareNode()
       ..initialize(name)
       ..parent = parent

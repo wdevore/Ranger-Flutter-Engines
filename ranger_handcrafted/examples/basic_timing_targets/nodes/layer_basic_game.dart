@@ -29,10 +29,11 @@ class LayerBasicGame extends core.Node {
     squareNode.setPosition(300.0, 200.0);
     squareNode.setScale(100.0);
 
+    double scale = 15.0;
     textNode =
         core.StaticTextNode.create('ABBa', world, this, charSpacing: 0.5);
-    textNode.setPosition(100.0, 100.0);
-    textNode.setScale(100.0);
+    textNode.setPosition(scale, world.deviceSize.height - scale);
+    textNode.setScale(scale);
   }
 
   // --------------------------------------------------------------------------

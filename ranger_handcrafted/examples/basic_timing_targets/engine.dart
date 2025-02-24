@@ -4,22 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 
+import 'nodes/node_basic_splash.dart';
 import 'world.dart';
 
 class Engine extends core.EngineCore {
-  late core.WorldCore world;
   final core.MouseEvent mouseEvent = core.MouseEvent();
 
   Engine();
 
   factory Engine.create(String relativePath, String overrides) {
-    Engine e = Engine()..world = World.create(relativePath);
-
-    // Set background clear color
+    Engine e = Engine()
+      ..world = World.create(relativePath)
+      ..state = core.EngineState.constructing;
 
     try {
-      e.configure();
-      e.world.construct();
+      e
+        ..configure()
+        ..world.construct();
     } on core.WorldException catch (exp) {
       e.lastException = exp.message;
       stdout.write('${e.lastException}\n');
@@ -37,8 +38,6 @@ class Engine extends core.EngineCore {
   @override
   void boot(String nodeName) {
     world.nodeManager.pushNode(nodeName);
-
-    state = core.EngineState.running;
   }
 
   void end() {
@@ -77,12 +76,25 @@ class Engine extends core.EngineCore {
   @override
   void render(Canvas canvas, Size size) {
     try {
-      world
-        ..deviceSize = size
-        ..nodeManager.visit(0.0, canvas, size);
+      world.nodeManager.visit(0.0, canvas, size);
     } on core.NodeException catch (e) {
       state = core.EngineState.halted;
       debugPrint('$e');
     }
+  }
+
+  @override
+  void construct() {
+    NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
+    // Preset Splash to replace NodeBasicBoot when boot exits.
+    // Thus we add and push splash.
+    world.nodeManager.addPushNode(splash);
+
+    core.NodeBasicBoot basicBoot =
+        core.NodeBasicBoot.create('Boot', world.nodeManager);
+    world.nodeManager.addNode(basicBoot);
+
+    // The run stack needs at least 1 Node
+    boot(basicBoot.name);
   }
 }

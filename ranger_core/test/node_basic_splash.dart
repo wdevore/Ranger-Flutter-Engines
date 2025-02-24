@@ -1,20 +1,20 @@
 import 'package:ranger_core/src/extras/events/event.dart';
 import 'package:ranger_core/src/graph/node.dart';
+import 'package:ranger_core/src/world_core.dart';
 
 import 'layer_basic_game.dart';
-import 'world.dart';
 
 class NodeBasicSplash extends Node {
   NodeBasicSplash();
 
-  factory NodeBasicSplash.create(String name, World world) {
+  factory NodeBasicSplash.create(String name, WorldCore world) {
     NodeBasicSplash scene = NodeBasicSplash()
       ..initialize(name)
       ..build(world);
     return scene;
   }
 
-  void build(World world) {
+  void build(WorldCore world) {
     LayerBasicGame.create('Game Layer', world, this);
   }
 

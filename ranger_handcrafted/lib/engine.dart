@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ranger_core/ranger_core.dart';
 
+import 'nodes/scene_basic_splash.dart';
 import 'world.dart';
 
 class Engine extends EngineCore {
-  late World world;
-
   Engine();
 
   factory Engine.create(String relativePath, String overrides) {
-    Engine e = Engine()..world = World.create(relativePath);
-
-    // Set background clear color
+    Engine e = Engine()
+      ..world = World.create(relativePath)
+      ..state = EngineState.constructing;
 
     try {
       e.configure();
@@ -36,8 +35,6 @@ class Engine extends EngineCore {
   @override
   void boot(String nodeName) {
     world.nodeManager.pushNode(nodeName);
-
-    state = EngineState.running;
   }
 
   void end() {
@@ -64,5 +61,23 @@ class Engine extends EngineCore {
       state = EngineState.halted;
       debugPrint('$e');
     }
+  }
+
+  @override
+  void construct() {
+    Engine engine = Engine.create('relativePath', 'overrides');
+    WorldCore world = engine.world;
+
+    NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
+    world.nodeManager.addNode(splash);
+    // Preset Splash to replace NodeBasicBoot when boot exits.
+    // The alternative is that Splash pushes itself.
+    world.nodeManager.pushNode('Splash');
+
+    NodeBasicBoot boot = NodeBasicBoot.create('Boot', world.nodeManager);
+    world.nodeManager.addNode(boot);
+
+    // The run stack needs at least 1 Node
+    engine.boot(boot.name);
   }
 }

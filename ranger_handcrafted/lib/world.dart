@@ -1,16 +1,7 @@
 import 'package:ranger_core/ranger_core.dart' as core;
 
 /// [World] is contained within the [Engine]
-class World {
-  // -----------------------------------------
-  // Scene graph is a node manager
-  // -----------------------------------------
-  late core.NodeManager nodeManager;
-
-  late String relativePath;
-
-  final core.Atlas atlas = core.Atlas();
-
+class World extends core.WorldCore {
   World();
 
   factory World.create(String relativePath) {
@@ -25,13 +16,11 @@ class World {
 
   /// [construct] is called by the Engine during Construct(). The Under/Over lays may
   /// be populated afterwards.
+  @override
   void construct() {}
 
+  @override
   void end() {
     nodeManager.close();
-  }
-
-  void routeEvents(core.Events event) {
-    // NodeManager().RouteEvents(event);
   }
 }

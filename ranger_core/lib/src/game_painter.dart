@@ -29,9 +29,7 @@ class GamePainter extends CustomPainter {
 
   /// When [animation] notifies listeners this custom painter will repaint.
   GamePainter(this.engine, this.animation, this._controller)
-      : super(repaint: animation) {
-    engine.state = EngineState.running;
-  }
+      : super(repaint: animation);
 
   double get currentTime => DateTime.now()
       .difference(_initialTime)
@@ -50,17 +48,27 @@ class GamePainter extends CustomPainter {
     canvas.drawPaint(baseBackgroundColor);
 
     if (!engine.runOneLoop) {
-      if (engine.state == EngineState.running) {
-        engine.update(dt); // Update is independent of visibility
-        engine.render(canvas, size);
-      } else {
-        running = false;
-        if (engine.state == EngineState.halted) {
+      switch (engine.state) {
+        case EngineState.running:
+          engine.update(dt); // Update is independent of visibility
+          engine.render(canvas, size);
+          break;
+        case EngineState.constructing:
+          engine.world.deviceSize = size;
+          // Engine can now construct the game.
+          engine.construct();
+          engine.state = EngineState.stabilizing;
+          break;
+        case EngineState.stabilizing:
+          engine.state = EngineState.running;
+          break;
+        case EngineState.halted:
           canvas.drawPaint(Paint()..color = Colors.deepOrange);
-        } else if (engine.state == EngineState.exited) {
+          _controller.stop();
+        case EngineState.exited:
           canvas.drawPaint(Paint()..color = Colors.brown);
-        }
-        _controller.stop();
+          _controller.stop();
+          break;
       }
     }
   }

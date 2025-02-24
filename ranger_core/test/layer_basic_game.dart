@@ -1,15 +1,15 @@
 import 'package:ranger_core/src/extras/events/event.dart';
 import 'package:ranger_core/src/graph/node.dart';
+import 'package:ranger_core/src/world_core.dart';
 
 import 'my_square_node.dart';
-import 'world.dart';
 
 class LayerBasicGame extends Node {
   late MySquareNode squareNode;
 
   LayerBasicGame();
 
-  factory LayerBasicGame.create(String name, World world, Node parent) {
+  factory LayerBasicGame.create(String name, WorldCore world, Node parent) {
     LayerBasicGame layer = LayerBasicGame()
       ..initialize(name)
       ..parent = parent;
@@ -20,7 +20,7 @@ class LayerBasicGame extends Node {
     return layer;
   }
 
-  void build(World world) {
+  void build(WorldCore world) {
     // Add nodes
     squareNode = MySquareNode.create('Square', world, this);
     squareNode.setPosition(300.0, 300.0);

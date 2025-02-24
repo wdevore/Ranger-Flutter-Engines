@@ -1,9 +1,8 @@
-import 'package:ranger_core/src/exceptions.dart';
+import 'package:ranger_core/ranger_core.dart' as core;
 import 'package:test/test.dart';
 
 import 'engine.dart';
 import 'node_basic_splash.dart';
-import 'world.dart';
 
 void testEngine() {
   group('Engine', () {
@@ -13,7 +12,7 @@ void testEngine() {
       String message = '';
       try {
         engine.boot('');
-      } on NodeException catch (e) {
+      } on core.NodeException catch (e) {
         print(e);
         message = e.message;
       }
@@ -37,7 +36,7 @@ void testEngine() {
       //         |                    |                   |
       //      Underlay              Nodes             Overlay
 
-      World world = engine.world;
+      core.WorldCore world = engine.world;
 
       NodeBasicSplash splash = NodeBasicSplash.create('Splash', world);
       world.nodeManager.addNode(splash);

@@ -7,14 +7,12 @@ import 'package:ranger_core/ranger_core.dart';
 import 'world.dart';
 
 class Engine extends EngineCore {
-  late World world;
-
   Engine();
 
   factory Engine.create(String relativePath, String overrides) {
-    Engine e = Engine()..world = World.create(relativePath);
-
-    // Set background clear color
+    Engine e = Engine()
+      ..world = World.create(relativePath)
+      ..state = EngineState.constructing;
 
     try {
       e.configure();
@@ -36,8 +34,6 @@ class Engine extends EngineCore {
   @override
   void boot(String nodeName) {
     world.nodeManager.pushNode(nodeName);
-
-    state = EngineState.running;
   }
 
   void end() {
@@ -64,5 +60,10 @@ class Engine extends EngineCore {
       state = EngineState.halted;
       debugPrint('$e');
     }
+  }
+
+  @override
+  void construct() {
+    // TODO: implement construct
   }
 }

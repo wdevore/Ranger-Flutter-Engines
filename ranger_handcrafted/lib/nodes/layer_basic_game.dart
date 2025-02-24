@@ -1,14 +1,14 @@
 import 'package:ranger_core/ranger_core.dart' as core;
 
 import 'my_square_node.dart';
-import '../world.dart';
 
 class LayerBasicGame extends core.Node {
   late MySquareNode squareNode;
 
   LayerBasicGame();
 
-  factory LayerBasicGame.create(String name, World world, core.Node parent) {
+  factory LayerBasicGame.create(
+      String name, core.WorldCore world, core.Node parent) {
     LayerBasicGame layer = LayerBasicGame()
       ..initialize(name)
       ..parent = parent;
@@ -19,7 +19,7 @@ class LayerBasicGame extends core.Node {
     return layer;
   }
 
-  void build(World world) {
+  void build(core.WorldCore world) {
     // Add nodes
     squareNode = MySquareNode.create('Square', world, this);
     squareNode.setPosition(300.0, 300.0);

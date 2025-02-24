@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 
-import '../world.dart';
-
 class MySquareNode extends core.Node {
   late Paint paint = Paint();
   late core.SquareShape shape;
-  late World world;
+  late core.WorldCore world;
   late core.Renderer renderer;
 
   MySquareNode();
 
   // [parent] is of type Node not "Node?" because leaf nodes always have a
   // parent.
-  factory MySquareNode.create(String name, World world, core.Node parent) {
+  factory MySquareNode.create(
+      String name, core.WorldCore world, core.Node parent) {
     MySquareNode my = MySquareNode()
       ..initialize(name)
       ..parent = parent
