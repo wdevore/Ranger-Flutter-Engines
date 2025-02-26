@@ -98,8 +98,8 @@ class Engine extends core.EngineCore {
     // Add FPS to overlay
     double scale = 15.0;
     nm.overlay =
-        core.StaticTextNode.create('ABBa', world, null, charSpacing: 0.5);
-    nm.overlay!.setPosition(scale, world.deviceSize.height - scale);
+        core.StaticTextNode.create('-0.125', world, null, charSpacing: 0.5);
+    nm.overlay!.setPosition(scale, world.deviceSize.height - scale - 5);
     nm.overlay!.setScale(scale);
 
     // The run stack needs at least 1 Node
