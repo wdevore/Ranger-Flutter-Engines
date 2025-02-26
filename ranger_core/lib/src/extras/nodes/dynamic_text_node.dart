@@ -9,19 +9,19 @@ import '../renderers/renderer.dart';
 import '../shapes/atlas.dart';
 import '../shapes/path_shape.dart';
 
-class StaticTextNode extends Node {
+class DynamicTextNode extends Node {
   late Paint paint = Paint();
   late Path textPath;
   late WorldCore world;
   late PathShape shape;
   late Renderer renderer;
 
-  StaticTextNode();
+  DynamicTextNode();
 
-  factory StaticTextNode.create(String text, WorldCore world, Node? parent,
+  factory DynamicTextNode.create(String name, WorldCore world, Node? parent,
       {double charSpacing = 1.0}) {
-    StaticTextNode stn = StaticTextNode()
-      ..initialize(text)
+    DynamicTextNode stn = DynamicTextNode()
+      ..initialize(name)
       ..parent = parent
       ..nodeMan = world.nodeManager
       ..world = world
@@ -30,21 +30,18 @@ class StaticTextNode extends Node {
     // Set this Node as a child of the parent and make it render last.
     stn.parent?.children.addLast(stn);
 
-    stn.build(text, world.atlas, charSpacing);
+    stn
+      ..shape = PathShape.create('DynaText')
+      ..renderer = PathRenderer.create(stn.shape);
 
     return stn;
   }
 
-  void build(String text, Atlas atlas, double charSpacing) {
-    // First create a shape that will be renderered.
+  void setText(String text, Atlas atlas, double charSpacing) {
+    // First create a path construct a shape
     textPath = Atlas.createTextPath(text, charSpacing: charSpacing);
-    shape = PathShape.createWithPath(textPath, 'AbbaText');
 
-    // Add to Atlas for cache usage
-    atlas.addShape(shape);
-
-    // Now create a renderer using that shape.
-    renderer = PathRenderer.create(shape);
+    shape.path = textPath;
   }
 
   @override

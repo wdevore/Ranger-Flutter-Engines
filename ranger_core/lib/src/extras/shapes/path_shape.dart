@@ -4,23 +4,32 @@ import 'shape.dart';
 
 /// The [Shape] is assigned an [id] when it is added to the [Atlas].
 class PathShape extends Shape {
-  final Path path;
+  Path? path;
   Paint paint = Paint()
     ..color = Colors.white
     ..style = PaintingStyle.stroke;
 
-  PathShape(this.path);
+  PathShape();
 
-  factory PathShape.create(Path path, String name) {
-    PathShape ss = PathShape(path)..name = name;
+  factory PathShape.create(String name) {
+    PathShape ss = PathShape()..name = name;
+    return ss;
+  }
+
+  factory PathShape.createWithPath(Path path, String name) {
+    PathShape ss = PathShape()
+      ..path = path
+      ..name = name;
     return ss;
   }
 
   @override
   void draw(Canvas canvas) {
-    canvas.drawPath(
-      path,
-      paint,
-    );
+    if (path != null) {
+      canvas.drawPath(
+        path!,
+        paint,
+      );
+    }
   }
 }
