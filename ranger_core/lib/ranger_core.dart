@@ -10,6 +10,7 @@ export 'src/game_painter.dart' show GamePainter;
 
 export 'src/extras/nodes/group_node.dart' show GroupNode;
 export 'src/extras/nodes/static_text_node.dart' show StaticTextNode;
+export 'src/extras/nodes/dynamic_text_node.dart' show DynamicTextNode;
 
 export 'src/extras/node_basic_boot.dart' show NodeBasicBoot;
 export 'src/extras/renderers/renderer.dart' show Renderer;

@@ -9,6 +9,10 @@ import 'world.dart';
 
 class Engine extends core.EngineCore {
   final core.MouseEvent mouseEvent = core.MouseEvent();
+  late core.DynamicTextNode fpsText;
+  double _fpsCnt = 0.0;
+  double _fpsSum = 0.0;
+  final double _fpsMax = 10.0;
 
   Engine();
 
@@ -71,6 +75,18 @@ class Engine extends core.EngineCore {
   @override
   void update(double dt) {
     world.nodeManager.update(dt, 0.0);
+
+    if (_fpsCnt > 9) {
+      fpsText.setText(
+          'fps ${(1.0 / (_fpsSum / _fpsCnt) * 1000.0).toStringAsFixed(2)}',
+          world.atlas,
+          0.5);
+      _fpsCnt = 0.0;
+      _fpsSum = 0.0;
+    } else {
+      _fpsCnt += 1.0;
+      _fpsSum += dt;
+    }
   }
 
   @override
@@ -97,10 +113,14 @@ class Engine extends core.EngineCore {
 
     // Add FPS to overlay
     double scale = 15.0;
-    nm.overlay =
-        core.StaticTextNode.create('-0.125', world, null, charSpacing: 0.5);
-    nm.overlay!.setPosition(scale, world.deviceSize.height - scale - 5);
-    nm.overlay!.setScale(scale);
+    // nm.overlay =
+    //     core.StaticTextNode.create('-0.125', world, null, charSpacing: 0.5);
+    // nm.overlay!.setPosition(scale, world.deviceSize.height - scale - 5);
+    // nm.overlay!.setScale(scale);
+    fpsText = core.DynamicTextNode.create('fps', world, null, charSpacing: 0.5);
+    fpsText.setPosition(scale, world.deviceSize.height - scale - 5);
+    fpsText.setScale(scale);
+    nm.overlay = fpsText;
 
     // The run stack needs at least 1 Node
     boot(basicBoot.name);
