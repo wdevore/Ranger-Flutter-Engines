@@ -76,7 +76,7 @@ class Engine extends core.EngineCore {
   void update(double dt) {
     world.nodeManager.update(dt, 0.0);
 
-    if (_fpsCnt > 9) {
+    if (_fpsCnt >= _fpsMax) {
       fpsText.setText(
           'fps ${(1.0 / (_fpsSum / _fpsCnt) * 1000.0).toStringAsFixed(2)}',
           world.atlas,
