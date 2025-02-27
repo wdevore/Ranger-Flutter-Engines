@@ -11,7 +11,7 @@ import '../shapes/path_shape.dart';
 
 class DynamicTextNode extends Node {
   late Paint paint = Paint();
-  late Path textPath;
+  final Path textPath = Path();
   late WorldCore world;
   late PathShape shape;
   late Renderer renderer;
@@ -34,14 +34,15 @@ class DynamicTextNode extends Node {
       ..shape = PathShape.create('DynaText')
       ..renderer = PathRenderer.create(stn.shape);
 
+    stn.shape.path = stn.textPath;
+
     return stn;
   }
 
   void setText(String text, Atlas atlas, double charSpacing) {
     // First create a path construct a shape
-    textPath = Atlas.createTextPath(text, charSpacing: charSpacing);
-
-    shape.path = textPath;
+    textPath.reset();
+    Atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
   }
 
   @override

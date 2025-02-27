@@ -10,10 +10,8 @@ import 'vector_font.dart';
 class StaticVectorText {
   static const whiteSpacing = 0.5;
 
-  static Path buildPath(String text, VectorFont vectorFont,
+  static Path buildPath(String text, Path polyLine, VectorFont vectorFont,
       {double charSpacing = 1.0}) {
-    Path polyLine = Path();
-
     List<String> chars = text.split('');
     polyLine.reset();
 

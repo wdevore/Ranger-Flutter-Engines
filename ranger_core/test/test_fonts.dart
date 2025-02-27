@@ -8,7 +8,8 @@ void testFonts() {
     test('Parser', () {
       List<String> data = VectorFont.loadDefaultVectorFont();
       VectorFont vf = VectorFont.create(data);
-      Path path = StaticVectorText.buildPath('ABBa', vf);
+      Path textPath = Path();
+      StaticVectorText.buildPath('ABBa', textPath, vf);
 
       // expect(
       //   message == '',

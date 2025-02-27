@@ -11,7 +11,7 @@ import '../shapes/path_shape.dart';
 
 class StaticTextNode extends Node {
   late Paint paint = Paint();
-  late Path textPath;
+  final Path textPath = Path();
   late WorldCore world;
   late PathShape shape;
   late Renderer renderer;
@@ -30,6 +30,8 @@ class StaticTextNode extends Node {
     // Set this Node as a child of the parent and make it render last.
     stn.parent?.children.addLast(stn);
 
+    stn.shape.path = stn.textPath;
+
     stn.build(text, world.atlas, charSpacing);
 
     return stn;
@@ -37,7 +39,7 @@ class StaticTextNode extends Node {
 
   void build(String text, Atlas atlas, double charSpacing) {
     // First create a shape that will be renderered.
-    textPath = Atlas.createTextPath(text, charSpacing: charSpacing);
+    Atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
     shape = PathShape.createWithPath(textPath, 'AbbaText');
 
     // Add to Atlas for cache usage

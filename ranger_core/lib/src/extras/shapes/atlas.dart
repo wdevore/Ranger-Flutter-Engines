@@ -72,12 +72,13 @@ class Atlas {
     return rect;
   }
 
-  static Path createTextPath(String text, {double charSpacing = 1.0}) {
+  static Path buildTextPath(String text, Path polyLine,
+      {double charSpacing = 1.0}) {
     List<String> data = VectorFont.loadDefaultVectorFont();
     VectorFont vectorFont = VectorFont.create(data);
 
-    Path textPath =
-        StaticVectorText.buildPath(text, vectorFont, charSpacing: charSpacing);
+    Path textPath = StaticVectorText.buildPath(text, polyLine, vectorFont,
+        charSpacing: charSpacing);
 
     return textPath;
   }
