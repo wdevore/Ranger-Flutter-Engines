@@ -22,8 +22,9 @@ export 'src/extras/misc/delay.dart' show Delay;
 export 'src/extras/events/event.dart' show Event, MouseEvent;
 
 export 'src/extras/fonts/vector/vector_font.dart' show VectorFont;
-export 'src/extras/fonts/vector/static_vector_text.dart' show StaticVectorText;
+export 'src/extras/fonts/vector/vector_text.dart' show VectorText;
 export 'src/extras/fonts/vector/char_vectors.dart' show CharVectors, CharVertex;
+export 'src/extras/fonts/vector/path_text.dart' show PathText;
 
 export 'src/geometry/point.dart' show Point;
 export 'src/geometry/rectangle.dart' show Rectangle;

@@ -4,6 +4,7 @@ import '../../extras/events/event.dart';
 import '../../maths/matrix4.dart' as maths;
 import '../../graph/node.dart';
 import '../../world_core.dart';
+import '../fonts/vector/path_text.dart';
 import '../renderers/path_renderer.dart';
 import '../renderers/renderer.dart';
 import '../shapes/atlas.dart';
@@ -11,7 +12,7 @@ import '../shapes/path_shape.dart';
 
 class DynamicTextNode extends Node {
   late Paint paint = Paint();
-  final Path textPath = Path();
+  final PathText textPath = PathText();
   late WorldCore world;
   late PathShape shape;
   late Renderer renderer;
@@ -41,8 +42,8 @@ class DynamicTextNode extends Node {
 
   void setText(String text, Atlas atlas, double charSpacing) {
     // First create a path construct a shape
-    textPath.reset();
-    Atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
+    textPath.path.reset();
+    world.atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
   }
 
   @override

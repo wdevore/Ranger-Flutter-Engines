@@ -9,7 +9,7 @@ void testFonts() {
       List<String> data = VectorFont.loadDefaultVectorFont();
       VectorFont vf = VectorFont.create(data);
       Path textPath = Path();
-      StaticVectorText.buildPath('ABBa', textPath, vf);
+      // VectorText.buildPath('ABBa', textPath, vf);
 
       // expect(
       //   message == '',

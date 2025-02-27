@@ -4,6 +4,7 @@ import '../../extras/events/event.dart';
 import '../../maths/matrix4.dart' as maths;
 import '../../graph/node.dart';
 import '../../world_core.dart';
+import '../fonts/vector/path_text.dart';
 import '../renderers/path_renderer.dart';
 import '../renderers/renderer.dart';
 import '../shapes/atlas.dart';
@@ -11,7 +12,7 @@ import '../shapes/path_shape.dart';
 
 class StaticTextNode extends Node {
   late Paint paint = Paint();
-  final Path textPath = Path();
+  final PathText textPath = PathText();
   late WorldCore world;
   late PathShape shape;
   late Renderer renderer;
@@ -39,7 +40,7 @@ class StaticTextNode extends Node {
 
   void build(String text, Atlas atlas, double charSpacing) {
     // First create a shape that will be renderered.
-    Atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
+    world.atlas.buildTextPath(text, textPath, charSpacing: charSpacing);
     shape = PathShape.createWithPath(textPath, 'AbbaText');
 
     // Add to Atlas for cache usage
@@ -55,7 +56,5 @@ class StaticTextNode extends Node {
   }
 
   @override
-  void event(Event input) {
-    // TODO: implement event
-  }
+  void event(Event input) {}
 }

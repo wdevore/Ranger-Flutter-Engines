@@ -117,8 +117,10 @@ class Engine extends core.EngineCore {
     //     core.StaticTextNode.create('-0.125', world, null, charSpacing: 0.5);
     // nm.overlay!.setPosition(scale, world.deviceSize.height - scale - 5);
     // nm.overlay!.setScale(scale);
-    fpsText = core.DynamicTextNode.create('fps', world, null, charSpacing: 0.5);
-    fpsText.setPosition(scale, world.deviceSize.height - scale - 5);
+    fpsText = core.DynamicTextNode.create('fps', world, null);
+    fpsText.setText('fps 0.0', world.atlas, 0.5);
+    fpsText.setPosition(
+        scale, world.deviceSize.height - fpsText.textPath.height * scale);
     fpsText.setScale(scale);
     nm.overlay = fpsText;
 

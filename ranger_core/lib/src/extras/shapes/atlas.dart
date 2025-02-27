@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../fonts/vector/static_vector_text.dart';
+import '../fonts/vector/path_text.dart';
+import '../fonts/vector/vector_text.dart';
 import '../fonts/vector/vector_font.dart';
 import 'shape.dart';
 
 /// A collection of generic shapes
 class Atlas {
   static int idCnt = 0;
+  static List<String> vectorFontData = VectorFont.loadDefaultVectorFont();
   final Map<String, Shape> shapes = {};
+  late VectorFont vectorFont;
+  final VectorText vectorText = VectorText();
 
-  Atlas();
+  Atlas() {
+    vectorFont = VectorFont.create(vectorFontData);
+  }
 
   int addShape(Shape shape) {
     shape.id = idCnt++;
@@ -72,14 +78,8 @@ class Atlas {
     return rect;
   }
 
-  static Path buildTextPath(String text, Path polyLine,
+  void buildTextPath(String text, PathText pathText,
       {double charSpacing = 1.0}) {
-    List<String> data = VectorFont.loadDefaultVectorFont();
-    VectorFont vectorFont = VectorFont.create(data);
-
-    Path textPath = StaticVectorText.buildPath(text, polyLine, vectorFont,
-        charSpacing: charSpacing);
-
-    return textPath;
+    vectorText.buildPath(text, pathText, vectorFont, charSpacing: charSpacing);
   }
 }

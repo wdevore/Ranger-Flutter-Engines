@@ -1,19 +1,23 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
 import 'char_vectors.dart';
+import 'path_text.dart';
 import 'vector_font.dart';
 
 /// Converts vector lists into a Canvas Path.
 /// The Anchor position defaults to the center of first character.
-class StaticVectorText {
+class VectorText {
   static const whiteSpacing = 0.5;
+  double width = 0.0;
+  double height = 0.0;
 
-  static Path buildPath(String text, Path polyLine, VectorFont vectorFont,
+  void buildPath(String text, PathText pathText, VectorFont vectorFont,
       {double charSpacing = 1.0}) {
     List<String> chars = text.split('');
-    polyLine.reset();
+    pathText.path.reset();
 
     double offset = 0.0;
 
@@ -29,20 +33,26 @@ class StaticVectorText {
       if (vectorFont.characters.containsKey(char)) {
         CharVectors cvs = vectorFont.characters[char]!;
         double charWidth = cvs.width;
+
+        width = max(width, charWidth);
+        height = max(height, cvs.height);
+
         // Build Path
         for (var path in cvs.paths) {
           cv = path.elementAt(0);
           // A moveTo starts each path.
-          polyLine.moveTo(cv.x + offset, cv.y);
+          pathText.path.moveTo(cv.x + offset, cv.y);
           for (var i = 1; i < path.length; i++) {
             cv = path.elementAt(i);
-            polyLine.lineTo(cv.x + offset, cv.y);
+            pathText.path.lineTo(cv.x + offset, cv.y);
           }
         }
         offset += charSpacing + charWidth;
       }
     }
 
-    return polyLine;
+    pathText
+      ..width = width
+      ..height = height;
   }
 }

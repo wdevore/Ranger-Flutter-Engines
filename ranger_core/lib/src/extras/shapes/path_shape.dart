@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../fonts/vector/path_text.dart';
 import 'shape.dart';
 
 /// The [Shape] is assigned an [id] when it is added to the [Atlas].
 class PathShape extends Shape {
-  Path? path;
+  PathText? path;
   Paint paint = Paint()
     ..color = Colors.white
     ..style = PaintingStyle.stroke;
@@ -16,7 +17,7 @@ class PathShape extends Shape {
     return ss;
   }
 
-  factory PathShape.createWithPath(Path path, String name) {
+  factory PathShape.createWithPath(PathText path, String name) {
     PathShape ss = PathShape()
       ..path = path
       ..name = name;
@@ -27,7 +28,7 @@ class PathShape extends Shape {
   void draw(Canvas canvas) {
     if (path != null) {
       canvas.drawPath(
-        path!,
+        path!.path,
         paint,
       );
     }
