@@ -17,50 +17,27 @@ This is a basic gameloop enhanced for Ranger.
   - Velocity ✓
   - AffineTransform ✓
   - Velocity ✓
+    - Move ship around
   - Zoom
+    - Zoom at cursor
   - Interpolation
   - Transforms ✓
 - Nodes ✓
+  - Node dragging  **<--Working**
 - Geometry
   - Point ✓
+  - Intersecting
+    - Cursor enter ✓
 - IO
   - Gestures ✓
+    - Cursor icon
   - Keyboard
-- Fonts
-  - Vector  <=== **WORKING**
-    - Static text
-    - Dynamic text
+- Fonts ✓
+  - Vector ✓
+    - Static text ✓
+    - Dynamic text ✓
 - Audio
+- GUI framework
 - *Textures* (optional)
 
 # Vector fonts
-A simple vector line based flat file format.
-Regular expression: 
-```re
-([0-9.-]+),([0-9.-]+)
-```
-
-For example:
-```
-A
--0.5,0.5 0.0,-0.5 0.5,0.5    <--- 1st poly line
--0.25,0.0 0.25,0.0            <--- 2nd poly line
-EOC
-EOF
-```
-The fonts are defined in a Unit square.
-```
-      (-0.5,-0.5)
-            .----------------------.
-            |          |           |
-            |          |           |
-            |          |           |
-            |          |           |
-            .--------(0,0)---------.
-            |          |           |
-            |          |           |
-            |          |           |
-            |          |           |
-            .----------------------.
-                                  (0.5,0.5)
-```

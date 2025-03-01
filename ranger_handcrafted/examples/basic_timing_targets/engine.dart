@@ -12,7 +12,7 @@ class Engine extends core.EngineCore {
   late core.DynamicTextNode fpsText;
   double _fpsCnt = 0.0;
   double _fpsSum = 0.0;
-  final double _fpsMax = 10.0;
+  final double _fpsAverageMax = 60.0;
 
   Engine();
 
@@ -76,7 +76,7 @@ class Engine extends core.EngineCore {
   void update(double dt) {
     world.nodeManager.update(dt, 0.0);
 
-    if (_fpsCnt >= _fpsMax) {
+    if (_fpsCnt >= _fpsAverageMax) {
       fpsText.setText(
           'fps ${(1.0 / (_fpsSum / _fpsCnt) * 1000.0).toStringAsFixed(2)}',
           world.atlas,
@@ -118,6 +118,7 @@ class Engine extends core.EngineCore {
     // nm.overlay!.setPosition(scale, world.deviceSize.height - scale - 5);
     // nm.overlay!.setScale(scale);
     fpsText = core.DynamicTextNode.create('fps', world, null);
+    // Set some text in order to obtain height.
     fpsText.setText('fps 0.0', world.atlas, 0.5);
     fpsText.setPosition(
         scale, world.deviceSize.height - fpsText.textPath.height * scale);
