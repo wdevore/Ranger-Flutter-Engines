@@ -52,8 +52,9 @@ class Engine extends core.EngineCore {
   @override
   void inputMouseMove(PointerHoverEvent event) {
     mouseEvent
-      ..position = event.position
-      ..delta = event.delta;
+      ..isMoveEvent = true
+      ..position = event.position;
+
     world.nodeManager.event(mouseEvent);
 
     // print('mousemove: ${event.position} : ${event.delta}');

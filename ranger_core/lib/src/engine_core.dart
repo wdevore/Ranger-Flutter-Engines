@@ -36,6 +36,8 @@ abstract class EngineCore {
   void render(Canvas canvas, Size size);
 
   void inputMouseMove(PointerHoverEvent event);
-  void inputPanDown(DragDownDetails details);
-  void inputPanUpdate(DragUpdateDetails details);
+  void inputPanStart(DragStartDetails details) {}
+  void inputPanEnd(DragEndDetails details) {}
+  void inputPanDown(DragDownDetails details) {}
+  void inputPanUpdate(DragUpdateDetails details) {}
 }

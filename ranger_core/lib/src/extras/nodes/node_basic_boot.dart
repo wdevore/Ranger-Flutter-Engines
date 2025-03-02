@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:ranger_core/ranger_core.dart' as core;
-import '../graph/node.dart';
-import '../graph/node_manager.dart';
-import 'events/event.dart';
-import 'misc/delay.dart';
+import '../../graph/node.dart';
+import '../../graph/node_manager.dart';
+import '../events/event.dart';
+import '../misc/delay.dart';
 
 enum BootState {
   /// Node maintains its current state (i.e. running)
@@ -20,7 +20,7 @@ class NodeBasicBoot extends Node {
   BootState customeState = BootState.maintain;
   Paint baseBackgroundColor = Paint()..color = Colors.indigo;
 
-  Delay delay = Delay.create(1000.0);
+  Delay delay = Delay.create(100.0);
 
   NodeBasicBoot();
 

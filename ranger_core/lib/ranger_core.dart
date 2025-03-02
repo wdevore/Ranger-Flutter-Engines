@@ -11,15 +11,16 @@ export 'src/game_painter.dart' show GamePainter;
 export 'src/extras/nodes/group_node.dart' show GroupNode;
 export 'src/extras/nodes/static_text_node.dart' show StaticTextNode;
 export 'src/extras/nodes/dynamic_text_node.dart' show DynamicTextNode;
+export 'src/extras/nodes/node_basic_boot.dart' show NodeBasicBoot;
 
-export 'src/extras/node_basic_boot.dart' show NodeBasicBoot;
 export 'src/extras/renderers/renderer.dart' show Renderer;
 export 'src/extras/renderers/square_renderer.dart' show SquareRenderer;
 export 'src/extras/shapes/atlas.dart' show Atlas;
 export 'src/extras/shapes/shape.dart' show Shape;
 export 'src/extras/shapes/square_shape.dart' show SquareShape;
 export 'src/extras/misc/delay.dart' show Delay;
-export 'src/extras/events/event.dart' show Event, MouseEvent;
+
+export 'src/extras/events/event.dart' show Event, MouseEvent, MousePanEvent;
 
 export 'src/extras/fonts/vector/vector_font.dart' show VectorFont;
 export 'src/extras/fonts/vector/vector_text.dart' show VectorText;
