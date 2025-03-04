@@ -23,7 +23,7 @@ This is a basic gameloop enhanced for Ranger.
   - Interpolation
   - Transforms ✓
 - Nodes ✓
-  - Node dragging  **<--Working**
+  - Node dragging  *without zoom* **<--Working**
 - Geometry
   - Point ✓
   - Intersecting

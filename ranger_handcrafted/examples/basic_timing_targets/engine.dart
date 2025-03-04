@@ -51,9 +51,7 @@ class Engine extends core.EngineCore {
   /// Called by GamePainter.
   @override
   void inputMouseMove(PointerHoverEvent event) {
-    mouseEvent
-      ..isMoveEvent = true
-      ..position = event.position;
+    mouseEvent.position = event.position;
 
     world.nodeManager.event(mouseEvent);
 

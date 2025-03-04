@@ -70,15 +70,13 @@ class MySquareNode extends core.Node {
   }
 
   // --------------------------------------------------------------------------
-  // Event targets (IO)
+  // Event targets (IO) (Only called if this Node registered itself)
   // --------------------------------------------------------------------------
   @override
   void event(core.Event event) {
     switch (event) {
       case core.MouseEvent e:
-        if (e.isMoveEvent) {
-          shape.collision = _isMouseInNode(e.position);
-        }
+        shape.collision = _isMouseInNode(e.position);
         break;
       case core.MousePanEvent e:
         if (e.isDragUpdate && e.delta != null) {
@@ -90,7 +88,8 @@ class MySquareNode extends core.Node {
         }
         break;
       default:
-        throw UnimplementedError('Unknown Event type');
+        // throw UnimplementedError('$name: Unknown Event type');
+        break;
     }
   }
 
@@ -107,8 +106,7 @@ class MySquareNode extends core.Node {
       // print('local: $localPosition => $bounds');
       // print('${e.position} => local: $localPosition');
 
-      shape.collision = bounds.coordsInside(localPosition.x, localPosition.y);
-      return shape.collision;
+      return bounds.coordsInside(localPosition.x, localPosition.y);
     }
     return false;
   }
@@ -127,8 +125,8 @@ class MySquareNode extends core.Node {
       //   break;
       default:
         // Default is where most of the action takes place.
-        // setRotation(angle * core.degreesToRadians);
-        // angle += angleRate * dt;
+        setRotation(angle * core.degreesToRadians);
+        angle += angleRate * dt;
         break;
     }
   }

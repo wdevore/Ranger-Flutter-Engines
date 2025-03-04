@@ -12,6 +12,7 @@ export 'src/extras/nodes/group_node.dart' show GroupNode;
 export 'src/extras/nodes/static_text_node.dart' show StaticTextNode;
 export 'src/extras/nodes/dynamic_text_node.dart' show DynamicTextNode;
 export 'src/extras/nodes/node_basic_boot.dart' show NodeBasicBoot;
+export 'src/extras/nodes/zoom_node.dart' show ZoomNode;
 
 export 'src/extras/renderers/renderer.dart' show Renderer;
 export 'src/extras/renderers/square_renderer.dart' show SquareRenderer;
@@ -20,7 +21,8 @@ export 'src/extras/shapes/shape.dart' show Shape;
 export 'src/extras/shapes/square_shape.dart' show SquareShape;
 export 'src/extras/misc/delay.dart' show Delay;
 
-export 'src/extras/events/event.dart' show Event, MouseEvent, MousePanEvent;
+export 'src/extras/events/event.dart'
+    show Event, MouseEvent, MousePanEvent, MousePointerEvent;
 
 export 'src/extras/fonts/vector/vector_font.dart' show VectorFont;
 export 'src/extras/fonts/vector/vector_text.dart' show VectorText;
@@ -50,3 +52,4 @@ export 'src/maths/matrix4.dart' show Matrix4;
 export 'src/maths/vector.dart' show Vector;
 export 'src/maths/vector3.dart' show Vector3;
 export 'src/maths/velocity.dart' show Velocity;
+export 'src/maths/zoom_transform.dart' show ZoomTransform;

@@ -100,11 +100,13 @@ class AffineTransform {
     out.y = (m[mb] * x) + (m[md] * y) + m[mf];
   }
 
+  /// [translate] mutates/concat *this* matrix using tx,ty
   void translate(double x, double y) {
     m[me] += (m[ma] * x) + (m[mc] * y);
     m[mf] += (m[mb] * x) + (m[md] * y);
   }
 
+  /// [makeTranslate] sets the transform to a Translate matrix
   void makeTranslate(double x, double y) {
     m[ma] = 1.0;
     m[mb] = 0.0;
@@ -123,6 +125,7 @@ class AffineTransform {
     m[mf] = p.y;
   }
 
+  /// [scale] mutates *this* matrix using sx, sy
   void scale(double sx, double sy) {
     m[ma] *= sx;
     m[mb] *= sx;
@@ -139,7 +142,9 @@ class AffineTransform {
     m[mf] = 0.0;
   }
 
-  /// This is only the a term. Use it with clear understanding.
+  /// [getPsuedoScale] returns the transform's [a] component, however,
+  /// this is only valid if the transform doesn't have a rotation or zoom applied.
+  /// **Use it with clear understanding**.
   double getPsuedoScale() {
     return m[ma];
   }
@@ -303,7 +308,15 @@ class AffineTransform {
     out.ty = determinant * (b * tx - a * ty);
   }
 
-  /// Transpose c and d elements.
+  /// [transpose] c and d elements.
+  ///
+  /// Converts either from or to pre or post multiplication.
+  ///
+  ///         a c
+  ///         b d
+  ///     to
+  ///         a b
+  ///         c d
   void transpose() {
     var c = m[mc];
     m[mc] = m[mb];

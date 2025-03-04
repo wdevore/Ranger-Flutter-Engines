@@ -8,8 +8,6 @@ abstract class Event {
 }
 
 class MouseEvent extends Event {
-  bool isMoveEvent = false;
-
   // void mouseMove(Offset position, Offset delta) {
   //   this.position = position;
   //   this.delta = delta;
@@ -17,8 +15,6 @@ class MouseEvent extends Event {
 
   @override
   void reset() {
-    isMoveEvent = false;
-
     position = null;
   }
 }
@@ -28,7 +24,6 @@ class MousePanEvent extends Event {
 
   // Drag = Pan
   bool isDragging = false;
-  bool isDragEvent = false;
   bool isDragDown = false;
   bool isDragStart = false;
   bool isDragUpdate = false;
@@ -36,12 +31,21 @@ class MousePanEvent extends Event {
 
   @override
   void reset() {
-    isDragEvent = false;
     isDragDown = false;
     isDragStart = false;
     isDragUpdate = false;
     isDragEnd = false;
 
+    position = null;
+    delta = null;
+  }
+}
+
+class MousePointerEvent extends Event {
+  Offset? delta;
+
+  @override
+  void reset() {
     position = null;
     delta = null;
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
@@ -10,6 +11,7 @@ import 'world.dart';
 class Engine extends core.EngineCore {
   final core.MouseEvent mouseEvent = core.MouseEvent();
   final core.MousePanEvent mousePanEvent = core.MousePanEvent();
+  final core.MousePointerEvent mousePointerEvent = core.MousePointerEvent();
 
   late core.DynamicTextNode fpsText;
   double _fpsCnt = 0.0;
@@ -92,9 +94,7 @@ class Engine extends core.EngineCore {
   void inputMouseMove(PointerHoverEvent event) {
     mouseEvent.reset();
 
-    mouseEvent
-      ..isMoveEvent = true
-      ..position = event.position;
+    mouseEvent.position = event.position;
 
     world.nodeManager.event(mouseEvent);
 
@@ -104,7 +104,7 @@ class Engine extends core.EngineCore {
   /// Called by GamePainter.
   @override
   void inputPanDown(DragDownDetails details) {
-    print('pandown: $details');
+    // print('pandown: $details');
   }
 
   @override
@@ -118,7 +118,7 @@ class Engine extends core.EngineCore {
 
     world.nodeManager.event(mousePanEvent);
 
-    print('panstart: $details');
+    // print('panstart: $details');
   }
 
   /// Called by GamePainter.
@@ -133,7 +133,7 @@ class Engine extends core.EngineCore {
 
     world.nodeManager.event(mousePanEvent);
 
-    print('panupdate: $details');
+    // print('panupdate: $details');
   }
 
   @override
@@ -147,7 +147,20 @@ class Engine extends core.EngineCore {
 
     world.nodeManager.event(mousePanEvent);
 
-    print('panend: $details');
+    // print('panend: $details');
+  }
+
+  @override
+  void inputPointerSignal(PointerSignalEvent event) {
+    if (event is PointerScrollEvent) {
+      mousePointerEvent.reset();
+
+      mousePointerEvent
+        ..position = event.localPosition
+        ..delta = event.scrollDelta;
+
+      world.nodeManager.event(mousePointerEvent);
+    }
   }
 
   // --------------------------------------------------------------------------

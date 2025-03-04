@@ -53,6 +53,11 @@ class Vector {
     y *= s;
   }
 
+  void toIdentity() {
+    x = 1.0;
+    y = 1.0;
+  }
+
   void div(double s) {
     x /= s;
     y /= s;

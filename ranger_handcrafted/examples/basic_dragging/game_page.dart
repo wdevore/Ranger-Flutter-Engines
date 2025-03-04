@@ -45,16 +45,20 @@ class _GamePageState extends State<_GamePage>
     Engine engine = widget.engine;
 
     return Scaffold(
-      body: MouseRegion(
-        onHover: (event) => engine.inputMouseMove(event),
-        child: GestureDetector(
-          onPanDown: (details) => engine.inputPanDown(details),
-          onPanStart: (details) => engine.inputPanStart(details),
-          onPanEnd: (details) => engine.inputPanEnd(details),
-          onPanUpdate: (details) => engine.inputPanUpdate(details),
-          child: CustomPaint(
-            painter: GamePainter(engine, _animation, _controller),
-            child: _buildErrorExceptionOverlay(),
+      body: Listener(
+        // Scroll wheel events
+        onPointerSignal: (event) => engine.inputPointerSignal(event),
+        child: MouseRegion(
+          onHover: (event) => engine.inputMouseMove(event),
+          child: GestureDetector(
+            onPanDown: (details) => engine.inputPanDown(details),
+            onPanStart: (details) => engine.inputPanStart(details),
+            onPanEnd: (details) => engine.inputPanEnd(details),
+            onPanUpdate: (details) => engine.inputPanUpdate(details),
+            child: CustomPaint(
+              painter: GamePainter(engine, _animation, _controller),
+              child: _buildErrorExceptionOverlay(),
+            ),
           ),
         ),
       ),

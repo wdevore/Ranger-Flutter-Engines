@@ -40,4 +40,6 @@ abstract class EngineCore {
   void inputPanEnd(DragEndDetails details) {}
   void inputPanDown(DragDownDetails details) {}
   void inputPanUpdate(DragUpdateDetails details) {}
+
+  void inputPointerSignal(PointerSignalEvent event) {}
 }
