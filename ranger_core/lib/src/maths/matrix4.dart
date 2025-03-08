@@ -1,13 +1,19 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'vector3.dart';
 import 'affinetransform.dart';
+
+// Column-major vs row-major in openGL
+// https://austinmorlan.com/posts/opengl_matrices/
 
 //    2x3          3x3            4x4         OpenGL Array Index      M(Cell/Row)
 // | a c e |    | a c e |      | a c 0 e |      |00 04 08 12|     |M00 M01 M02 M03|
 // | b d f |    | b d f |  =>  | b d 0 f | ==>  |01 05 09 13| ==> |M10 M11 M12 M13|
 // 	            | 0 0 1 |      | 0 0 1 0 |      |02 06 10 14|     |M20 M21 M22 M23|
 // 	                           | 0 0 0 1 |      |03 07 11 15|     |M30 M31 M32 M33|
+//                                                    |
+// The data is stored in Column-major order  --------/.
 class Matrix4 {
   // Array indices
   // M00 XX: Typically the unrotated X component for scaling, also the cosine of the
@@ -70,7 +76,8 @@ class Matrix4 {
   // M33 WW: Typically the value one. On Vector3 multiplication this value is ignored.
   static const m33 = 15;
 
-  // Linear representation of matrix
+  // Linear representation of matrix in column-major order
+  // m00,m10,m20,m30,m01,m11,m21,m31,m02,m12,m22,m32,m03,m13,m23,m33
   final List<double> e = List.filled(16, 0.0);
 
   // Temporary matricies for multiplication
@@ -118,25 +125,25 @@ class Matrix4 {
   }
 
   void setFrom(Matrix4 m) {
-    e[m00] = e[m00];
-    e[m01] = e[m01];
-    e[m02] = e[m02];
-    e[m03] = e[m03];
+    e[m00] = m.e[m00];
+    e[m01] = m.e[m01];
+    e[m02] = m.e[m02];
+    e[m03] = m.e[m03];
 
-    e[m10] = e[m10];
-    e[m11] = e[m11];
-    e[m12] = e[m12];
-    e[m13] = e[m13];
+    e[m10] = m.e[m10];
+    e[m11] = m.e[m11];
+    e[m12] = m.e[m12];
+    e[m13] = m.e[m13];
 
-    e[m20] = e[m20];
-    e[m21] = e[m21];
-    e[m22] = e[m22];
-    e[m23] = e[m23];
+    e[m20] = m.e[m20];
+    e[m21] = m.e[m21];
+    e[m22] = m.e[m22];
+    e[m23] = m.e[m23];
 
-    e[m30] = e[m30];
-    e[m31] = e[m31];
-    e[m32] = e[m32];
-    e[m33] = e[m33];
+    e[m30] = m.e[m30];
+    e[m31] = m.e[m31];
+    e[m32] = m.e[m32];
+    e[m33] = m.e[m33];
   }
 
   // --------------------------------------------------------------------------
@@ -439,6 +446,8 @@ class Matrix4 {
   static void multiplyM4(Matrix4 a, Matrix4 b, Matrix4 out) {
     multiply4(a, b, out.e);
   }
+
+  Float64List toColumnMajorList() => Float64List.fromList(e);
 
   @override
   String toString() {

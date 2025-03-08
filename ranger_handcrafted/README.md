@@ -18,8 +18,8 @@ This is a basic gameloop enhanced for Ranger.
   - AffineTransform ✓
   - Velocity ✓
     - Move ship around
-  - Zoom
-    - Zoom at cursor
+  - Zoom ✓
+    - Zoom at cursor ✓
   - Interpolation
   - Transforms ✓
 - Nodes ✓

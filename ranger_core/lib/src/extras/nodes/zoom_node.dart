@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import '../../maths/matrix4.dart';
 import '../../geometry/point.dart';
 import '../../graph/node.dart';
 import '../../graph/spaces.dart';
@@ -5,10 +8,13 @@ import '../../maths/affinetransform.dart';
 import '../../maths/zoom_transform.dart';
 import '../../world_core.dart';
 import '../events/event.dart';
+import '../renderers/renderer.dart';
+import '../renderers/zoom_renderer.dart';
 
 class ZoomNode extends Node {
+  late Renderer renderer;
+
   late WorldCore world;
-  final Point localPosition = Point.create();
 
   late ZoomTransform zoom;
 
@@ -38,11 +44,13 @@ class ZoomNode extends Node {
   void build(WorldCore world) {
     zoomStepSize = 0.1;
 
-    zoom = ZoomTransform();
+    zoom = ZoomTransform.create();
     zoomPoint = Point();
 
     // We want input events from Mouse
     world.nodeManager.registerForEvents(this);
+
+    renderer = ZoomRenderer.create();
   }
 
   // --------------------------------------------------------
@@ -131,16 +139,18 @@ class ZoomNode extends Node {
         if (e.position != null) {
           mx = e.position!.dx.toInt();
           my = e.position!.dy.toInt();
+
           // This gets the local-space coords of the rectangle node.
           Spaces.mapDeviceToNode(
             world,
             mx,
             my,
             this,
-            localPosition,
+            zoomPoint,
           );
 
           setFocalPoint(zoomPoint.x, zoomPoint.y);
+          // print(zoomPoint);
         }
         break;
       case MousePointerEvent e:
@@ -148,8 +158,10 @@ class ZoomNode extends Node {
         // Positive delta = zoom out
         if (e.delta != null) {
           if (e.delta!.dy < 0.0) {
+            // print('zoomin');
             zoomIn();
           } else {
+            // print('zoomout');
             zoomOut();
           }
         }
@@ -158,5 +170,10 @@ class ZoomNode extends Node {
         // throw UnimplementedError('$name: Unknown Event type');
         break;
     }
+  }
+
+  @override
+  void render(Matrix4 model, Canvas canvas, Size size) {
+    renderer.render(model, canvas, this);
   }
 }

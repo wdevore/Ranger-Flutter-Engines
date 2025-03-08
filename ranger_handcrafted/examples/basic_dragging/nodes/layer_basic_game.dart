@@ -6,6 +6,8 @@ class LayerBasicGame extends core.Node {
   late MySquareNode squareNode;
   late core.WorldCore world;
 
+  late core.ZoomNode zoomNode;
+
   LayerBasicGame();
 
   factory LayerBasicGame.create(
@@ -23,8 +25,10 @@ class LayerBasicGame extends core.Node {
   }
 
   void build(core.WorldCore world) {
+    zoomNode = core.ZoomNode.create('Zoom', world, this);
+
     // Add nodes
-    squareNode = MySquareNode.create('Square', 45.0, world, this);
+    squareNode = MySquareNode.create('Square', 45.0, world, zoomNode);
     squareNode.setPosition(300.0, 200.0);
     squareNode.setScale(100.0);
   }

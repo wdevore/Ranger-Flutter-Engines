@@ -44,6 +44,7 @@ class ZoomTransform {
     // the current zoom target.
     accTransform.translate(zoomAt.x, zoomAt.y);
     accTransform.scale(_scale.x, _scale.y);
+    // print('_scale: $_scale | $zoomAt');
     accTransform.translate(-zoomAt.x, -zoomAt.y);
 
     // We reset Scale because acc_transform is accumulative and has "captured"

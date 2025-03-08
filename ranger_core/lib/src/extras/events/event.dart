@@ -3,25 +3,20 @@ import 'package:flutter/widgets.dart';
 abstract class Event {
   // void mouseMove(Offset position, Offset delta);
   Offset? position;
+  Offset? delta;
 
   void reset();
 }
 
 class MouseEvent extends Event {
-  // void mouseMove(Offset position, Offset delta) {
-  //   this.position = position;
-  //   this.delta = delta;
-  // }
-
   @override
   void reset() {
     position = null;
+    delta = null;
   }
 }
 
 class MousePanEvent extends Event {
-  Offset? delta;
-
   // Drag = Pan
   bool isDragging = false;
   bool isDragDown = false;
@@ -42,8 +37,6 @@ class MousePanEvent extends Event {
 }
 
 class MousePointerEvent extends Event {
-  Offset? delta;
-
   @override
   void reset() {
     position = null;

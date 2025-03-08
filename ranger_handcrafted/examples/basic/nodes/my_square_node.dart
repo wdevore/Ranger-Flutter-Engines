@@ -34,7 +34,7 @@ class MySquareNode extends core.Node {
 
   @override
   void render(core.Matrix4 model, Canvas canvas, Size size) {
-    renderer.render(canvas, this);
+    renderer.render(model, canvas, this);
     // Finally call render incase the base Node want to decorate/adorn it.
     super.render(model, canvas, size);
   }

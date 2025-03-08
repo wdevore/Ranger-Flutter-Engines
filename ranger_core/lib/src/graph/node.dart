@@ -83,15 +83,18 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
 
     stack.save();
 
+    canvas.save();
+
     // TODO Because position and angles are dependent on lerping we perform
     // interpolation first.
     // node.interpolate(interpolation);
 
     var aft = node.calcTransform();
+    // if (node.name == 'Zoom') {
+    //   print('\n$aft');
+    // }
+    var model = stack.applyAffine(aft); // TODO aft should be used in renderer
 
-    var model = stack.applyAffine(aft);
-
-    // TODO add Atlas features for images
     node.render(model, canvas, size);
 
     // Some of the children may still be visible.
@@ -110,6 +113,8 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
       }
     }
     // }
+
+    canvas.restore();
 
     stack.restore();
   }

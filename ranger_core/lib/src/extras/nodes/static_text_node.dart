@@ -52,7 +52,7 @@ class StaticTextNode extends Node {
 
   @override
   void render(maths.Matrix4 model, Canvas canvas, Size size) {
-    renderer.render(canvas, this);
+    renderer.render(model, canvas, this);
   }
 
   @override

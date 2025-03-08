@@ -94,7 +94,9 @@ class Engine extends core.EngineCore {
   void inputMouseMove(PointerHoverEvent event) {
     mouseEvent.reset();
 
-    mouseEvent.position = event.position;
+    mouseEvent
+      ..position = event.position
+      ..delta = event.delta;
 
     world.nodeManager.event(mouseEvent);
 

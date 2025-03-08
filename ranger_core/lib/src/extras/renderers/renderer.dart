@@ -4,16 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../../graph/node.dart';
 import '../../maths/affinetransform.dart';
+import '../../maths/matrix4.dart' as matrix;
 
 abstract class Renderer {
   /// [canvas] is a [CustomPainter] renderer used in Flutter
-  void render(Canvas canvas, Node node) {
-    canvas.save();
-
-    // TODO use matrix instead
-    // Float64List f4 = Renderer.toColumnMajorList(node.calcTransform());
-    // canvas.transform(f4);
-
+  void render(matrix.Matrix4 model, Canvas canvas, Node node) {
     canvas.translate(node.position.x, node.position.y);
 
     if (node.rotation != 0.0) {
@@ -25,8 +20,6 @@ abstract class Renderer {
     }
 
     draw(canvas);
-
-    canvas.restore();
   }
 
   void draw(Canvas canvas);
