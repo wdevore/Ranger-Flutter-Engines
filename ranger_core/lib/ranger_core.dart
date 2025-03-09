@@ -16,13 +16,16 @@ export 'src/extras/nodes/zoom_node.dart' show ZoomNode;
 
 export 'src/extras/renderers/renderer.dart' show Renderer;
 export 'src/extras/renderers/square_renderer.dart' show SquareRenderer;
+
 export 'src/extras/shapes/atlas.dart' show Atlas;
 export 'src/extras/shapes/shape.dart' show Shape;
 export 'src/extras/shapes/square_shape.dart' show SquareShape;
+
 export 'src/extras/misc/delay.dart' show Delay;
+export 'src/extras/misc/drag_state.dart' show DragState;
 
 export 'src/extras/events/event.dart'
-    show Event, MouseEvent, MousePanEvent, MousePointerEvent;
+    show Event, EventState, MouseEvent, MousePanEvent, MousePointerEvent;
 
 export 'src/extras/fonts/vector/vector_font.dart' show VectorFont;
 export 'src/extras/fonts/vector/vector_text.dart' show VectorText;

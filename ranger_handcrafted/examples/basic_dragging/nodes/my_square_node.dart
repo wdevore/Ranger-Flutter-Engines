@@ -12,6 +12,7 @@ class MySquareNode extends core.Node {
   final double angleRate = 0.01; // radians per (1/framerate)
 
   final core.Point localPosition = core.Point.create();
+  final core.DragState dragState = core.DragState.create();
 
   MySquareNode();
 
@@ -79,12 +80,28 @@ class MySquareNode extends core.Node {
         shape.collision = _isMouseInNode(e.position);
         break;
       case core.MousePanEvent e:
-        if (e.isDragUpdate && e.delta != null) {
+        if (e.isDragDown) {
           shape.collision = _isMouseInNode(e.position);
-          if (shape.collision || e.isDragging) {
-            position.x += e.delta!.dx;
-            position.y += e.delta!.dy;
+          if (shape.collision) {
+            dragState.setButtonUsing(
+              e.position!.dx.toInt(),
+              e.position!.dy.toInt(),
+              world,
+              core.EventState.buttonLeft,
+              core.EventState.down,
+              this,
+            );
           }
+        }
+
+        if (e.isDragging && shape.collision) {
+          // Because the Layer and parent Node have no transformation between
+          // each other, we could also pass "this" instead of "square".
+          dragState.setMotionUsing(
+              e.position!.dx.toInt(), e.position!.dy.toInt(), world, this);
+
+          position.x += dragState.delta.x;
+          position.y += dragState.delta.y;
         }
         break;
       default:

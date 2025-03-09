@@ -1,20 +1,29 @@
 import 'package:flutter/widgets.dart';
 
+enum EventState {
+  none,
+  buttonLeft,
+  buttonRight,
+  buttonMiddle,
+  down,
+  up,
+  cancelled,
+  dragging,
+}
+
 abstract class Event {
-  // void mouseMove(Offset position, Offset delta);
+  EventState buttonState = EventState.none;
   Offset? position;
   Offset? delta;
 
-  void reset();
-}
-
-class MouseEvent extends Event {
-  @override
   void reset() {
+    buttonState = EventState.none;
     position = null;
     delta = null;
   }
 }
+
+class MouseEvent extends Event {}
 
 class MousePanEvent extends Event {
   // Drag = Pan
@@ -31,15 +40,8 @@ class MousePanEvent extends Event {
     isDragUpdate = false;
     isDragEnd = false;
 
-    position = null;
-    delta = null;
+    super.reset();
   }
 }
 
-class MousePointerEvent extends Event {
-  @override
-  void reset() {
-    position = null;
-    delta = null;
-  }
-}
+class MousePointerEvent extends Event {}

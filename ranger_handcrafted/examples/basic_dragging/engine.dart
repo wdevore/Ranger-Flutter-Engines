@@ -106,6 +106,13 @@ class Engine extends core.EngineCore {
   /// Called by GamePainter.
   @override
   void inputPanDown(DragDownDetails details) {
+    mousePanEvent.reset();
+
+    mousePanEvent
+      ..isDragDown = true
+      ..position = details.localPosition;
+
+    world.nodeManager.event(mousePanEvent);
     // print('pandown: $details');
   }
 

@@ -51,6 +51,12 @@ class _GamePageState extends State<_GamePage>
         child: MouseRegion(
           onHover: (event) => engine.inputMouseMove(event),
           child: GestureDetector(
+            // TapDown is cancelled if the mouse moves, but PanStart triggers
+            // instead.
+            // onTapDown: (details) => print('onTapDown: $details'),
+            // onTapUp: (details) => print('onTapUp: $details'),
+            // onTapCancel: () => print('onTapCancel'),
+            // PanDown is suppressed if TapDown is present above.
             onPanDown: (details) => engine.inputPanDown(details),
             onPanStart: (details) => engine.inputPanStart(details),
             onPanEnd: (details) => engine.inputPanEnd(details),

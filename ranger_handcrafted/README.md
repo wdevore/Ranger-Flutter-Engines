@@ -23,7 +23,7 @@ This is a basic gameloop enhanced for Ranger.
   - Interpolation
   - Transforms ✓
 - Nodes ✓
-  - Node dragging  *without zoom* **<--Working**
+  - Node dragging ✓ *with zoom*
 - Geometry
   - Point ✓
   - Intersecting
@@ -31,7 +31,7 @@ This is a basic gameloop enhanced for Ranger.
 - IO
   - Gestures ✓
     - Cursor icon
-  - Keyboard
+  - Keyboard **<--Working**
 - Fonts ✓
   - Vector ✓
     - Static text ✓
