@@ -169,7 +169,7 @@ class Engine extends core.EngineCore {
         ..position = event.localPosition
         ..delta = event.scrollDelta;
 
-      // world.nodeManager.event(mousePointerEvent);
+      world.nodeManager.event(mousePointerEvent);
     }
   }
 
@@ -182,7 +182,7 @@ class Engine extends core.EngineCore {
       ..isKeyUp = event is KeyUpEvent
       ..key = event.logicalKey.keyLabel;
 
-    // world.nodeManager.event(keyboardEvent);
+    // We don't call NodeManager's event method becaus it happens in the upate.
   }
 
   // --------------------------------------------------------------------------
