@@ -95,8 +95,6 @@ class MySquareNode extends core.Node {
         }
 
         if (e.isDragging && shape.collision) {
-          // Because the Layer and parent Node have no transformation between
-          // each other, we could also pass "this" instead of "square".
           dragState.setMotionUsing(
               e.position!.dx.toInt(), e.position!.dy.toInt(), world, this);
 

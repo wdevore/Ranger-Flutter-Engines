@@ -33,7 +33,7 @@ This is a basic gameloop enhanced for Ranger.
     - Cursor icon
   - Keyboard **<--Working**
 - Fonts ✓
-  - Vector ✓
+  - Vector **Finish alphas**
     - Static text ✓
     - Dynamic text ✓
 - Audio

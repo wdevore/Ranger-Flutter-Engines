@@ -11,12 +11,15 @@ import '../events/event.dart';
 import '../renderers/renderer.dart';
 import '../renderers/zoom_renderer.dart';
 
+/// This is a Node with no visual aspect (i.e. it has no Shape component)
 class ZoomNode extends Node {
+  // Simply sets the Canvas transform. No shape is renderered.
   late Renderer renderer;
 
   late WorldCore world;
 
-  late ZoomTransform zoom;
+  // Maintains accumulative transform
+  late ZoomTransform zoomTransform;
 
   double zoomStepSize = 0.0;
 
@@ -44,7 +47,7 @@ class ZoomNode extends Node {
   void build(WorldCore world) {
     zoomStepSize = 0.1;
 
-    zoom = ZoomTransform.create();
+    zoomTransform = ZoomTransform.create();
     zoomPoint = Point();
 
     // We want input events from Mouse
@@ -68,48 +71,48 @@ class ZoomNode extends Node {
   /// mouse is located.
   @override
   void setPosition(double x, double y) {
-    zoom.setPosition(x, y);
+    zoomTransform.setPosition(x, y);
     rippleDirty(true);
   }
 
   /// [setFocalPoint] sets the epi center of zoom
   void setFocalPoint(double x, double y) {
-    zoom.setAt(x, y);
+    zoomTransform.setAt(x, y);
     rippleDirty(true);
   }
 
   /// [scaleTo] sets the scale absolutely
   void scaleTo(double s) {
-    zoom.scale = s;
+    zoomTransform.scale = s;
     rippleDirty(true);
   }
 
   /// [zoomScale] returns the zoom's current scale value
   double zoomScale() {
-    return zoom.psuedoScale;
+    return zoomTransform.psuedoScale;
   }
 
   /// [zoomBy] is relative zooming using deltas
   void zoomBy(double dx, double dy) {
-    zoom.zoomBy(dx, dy);
+    zoomTransform.zoomBy(dx, dy);
     rippleDirty(true);
   }
 
   /// [translateBy] is relative translation
   void translateBy(double dx, double dy) {
-    zoom.translateBy(dx, dy);
+    zoomTransform.translateBy(dx, dy);
     rippleDirty(true);
   }
 
   /// [zoomIn] zooms inward making things bigger
   void zoomIn() {
-    zoom.zoomBy(zoomStepSize, zoomStepSize);
+    zoomTransform.zoomBy(zoomStepSize, zoomStepSize);
     rippleDirty(true);
   }
 
   /// [zoomOut] zooms outward making things smaller
   void zoomOut() {
-    zoom.zoomBy(-zoomStepSize, -zoomStepSize);
+    zoomTransform.zoomBy(-zoomStepSize, -zoomStepSize);
     rippleDirty(true);
   }
 
@@ -121,11 +124,11 @@ class ZoomNode extends Node {
   @override
   AffineTransform calcTransform() {
     if (dirty) {
-      zoom.update();
+      zoomTransform.update();
       dirty = false;
     }
 
-    return zoom.transform;
+    return zoomTransform.transform;
   }
 
   // --------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ranger_core/ranger_core.dart';
 
 import 'engine.dart';
@@ -38,32 +39,54 @@ class _GamePageState extends State<_GamePage>
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  final FocusNode _focusNode = FocusNode(
+    descendantsAreFocusable: false,
+    onKeyEvent: (node, event) {
+      switch (event.logicalKey.keyLabel) {
+        case '`':
+          SystemNavigator.pop();
+          break;
+        default:
+          print('focusnode: $event');
+          return KeyEventResult.ignored;
+      }
+
+      return KeyEventResult.handled;
+    },
+  );
+
   _GamePageState();
 
   @override
   Widget build(BuildContext context) {
     Engine engine = widget.engine;
+    // autofocus: true,
+    // focusNode: _focusNode,
 
     return Scaffold(
       body: Listener(
         // Scroll wheel events
         onPointerSignal: (event) => engine.inputPointerSignal(event),
-        child: MouseRegion(
-          onHover: (event) => engine.inputMouseMove(event),
-          child: GestureDetector(
-            // TapDown is cancelled if the mouse moves, but PanStart triggers
-            // instead.
-            // onTapDown: (details) => print('onTapDown: $details'),
-            // onTapUp: (details) => print('onTapUp: $details'),
-            // onTapCancel: () => print('onTapCancel'),
-            // PanDown is suppressed if TapDown is present above.
-            onPanDown: (details) => engine.inputPanDown(details),
-            onPanStart: (details) => engine.inputPanStart(details),
-            onPanEnd: (details) => engine.inputPanEnd(details),
-            onPanUpdate: (details) => engine.inputPanUpdate(details),
-            child: CustomPaint(
-              painter: GamePainter(engine, _animation, _controller),
-              child: _buildErrorExceptionOverlay(),
+        child: GestureDetector(
+          // TapDown is cancelled if the mouse moves, but PanStart triggers
+          // instead.
+          // onTapDown: (details) => print('onTapDown: $details'),
+          // onTapUp: (details) => print('onTapUp: $details'),
+          // onTapCancel: () => print('onTapCancel'),
+          // PanDown is suppressed if TapDown is present above.
+          onPanDown: (details) => engine.inputPanDown(details),
+          onPanStart: (details) => engine.inputPanStart(details),
+          onPanEnd: (details) => engine.inputPanEnd(details),
+          onPanUpdate: (details) => engine.inputPanUpdate(details),
+          child: Focus(
+            autofocus: true,
+            focusNode: _focusNode,
+            child: MouseRegion(
+              onHover: (event) => engine.inputMouseMove(event),
+              child: CustomPaint(
+                painter: GamePainter(engine, _animation, _controller),
+                child: _buildErrorExceptionOverlay(),
+              ),
             ),
           ),
         ),
@@ -84,6 +107,7 @@ class _GamePageState extends State<_GamePage>
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
