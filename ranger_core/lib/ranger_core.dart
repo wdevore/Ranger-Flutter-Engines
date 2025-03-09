@@ -25,7 +25,13 @@ export 'src/extras/misc/delay.dart' show Delay;
 export 'src/extras/misc/drag_state.dart' show DragState;
 
 export 'src/extras/events/event.dart'
-    show Event, EventState, MouseEvent, MousePanEvent, MousePointerEvent;
+    show
+        Event,
+        EventState,
+        MouseEvent,
+        MousePanEvent,
+        MousePointerEvent,
+        KeyboardEvent;
 
 export 'src/extras/fonts/vector/vector_font.dart' show VectorFont;
 export 'src/extras/fonts/vector/vector_text.dart' show VectorText;

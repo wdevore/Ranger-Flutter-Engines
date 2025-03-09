@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'world_core.dart';
 
@@ -42,4 +43,6 @@ abstract class EngineCore {
   void inputPanUpdate(DragUpdateDetails details) {}
 
   void inputPointerSignal(PointerSignalEvent event) {}
+
+  void inputKeyEvent(KeyEvent event) {}
 }

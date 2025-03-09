@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ranger_core/ranger_core.dart';
@@ -39,6 +41,9 @@ class _GamePageState extends State<_GamePage>
   late AnimationController _controller;
   late Animation<double> _animation;
 
+  _GamePageState();
+
+  // Keyboard events
   final FocusNode _focusNode = FocusNode(
     descendantsAreFocusable: false,
     onKeyEvent: (node, event) {
@@ -46,6 +51,39 @@ class _GamePageState extends State<_GamePage>
         case '`':
           SystemNavigator.pop();
           break;
+        case 'K':
+          if (event is KeyDownEvent) {
+            // engine.inputKeyEvent(event);
+            // print('K key');
+            // var result = Process.run(
+            //   runInShell: true,
+            //   'xset',
+            //   ['r', '30', '30'],
+            // );
+            // // result.whenComplete(() => print('K $result'));
+            // result.whenComplete(() {
+            //   if (result is ProcessResult) {
+            //     result.then((onValue) => print(onValue));
+            //   }
+            //   print('K $result');
+            // });
+          }
+          break;
+        case 'O':
+          // KeyRepeatEvent
+          // if (event is KeyDownEvent) {
+          //   print('O key');
+          //   var result = Process.run(
+          //     runInShell: true,
+          //     'xset',
+          //     ['r', '500', '33'],
+          //   );
+          //   result.whenComplete(() {
+          //     print('O $result');
+          //   });
+          // }
+          break;
+
         default:
           print('focusnode: $event');
           return KeyEventResult.ignored;
@@ -54,8 +92,6 @@ class _GamePageState extends State<_GamePage>
       return KeyEventResult.handled;
     },
   );
-
-  _GamePageState();
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +114,29 @@ class _GamePageState extends State<_GamePage>
           onPanStart: (details) => engine.inputPanStart(details),
           onPanEnd: (details) => engine.inputPanEnd(details),
           onPanUpdate: (details) => engine.inputPanUpdate(details),
+          // Focus must encapsilate MouseRegion otherwise you don't get events.
           child: Focus(
             autofocus: true,
-            focusNode: _focusNode,
+            focusNode: KeyFocusNode(engine)
+              ..onKeyEvent = (node, event) {
+                switch (event.logicalKey.keyLabel) {
+                  case '`':
+                    SystemNavigator.pop();
+                    break;
+                  // case 'K':
+                  //   engine.inputKeyEvent(event);
+                  //   break;
+                  // case 'O':
+                  //   break;
+
+                  default:
+                    // print('focusnode: $event');
+                    engine.inputKeyEvent(event);
+                  // return KeyEventResult.ignored;
+                }
+
+                return KeyEventResult.handled;
+              },
             child: MouseRegion(
               onHover: (event) => engine.inputMouseMove(event),
               child: CustomPaint(
@@ -123,5 +179,12 @@ class _GamePageState extends State<_GamePage>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
 
     _controller.repeat();
+  }
+}
+
+class KeyFocusNode extends FocusNode {
+  final EngineCore engine;
+  KeyFocusNode(this.engine) {
+    descendantsAreFocusable = false;
   }
 }

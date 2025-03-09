@@ -40,4 +40,8 @@ This is a basic gameloop enhanced for Ranger.
 - GUI framework
 - *Textures* (optional)
 
-# Vector fonts
+# Notes
+**Warning!** changing the keyboard repeat-rate breaks typing and you will need to reboot/restart!
+```sh
+xset r 30 30
+```

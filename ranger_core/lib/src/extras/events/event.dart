@@ -45,3 +45,18 @@ class MousePanEvent extends Event {
 }
 
 class MousePointerEvent extends Event {}
+
+class KeyboardEvent extends Event {
+  bool isKeyDown = false;
+  bool isKeyUp = false;
+  String key = '';
+
+  @override
+  void reset() {
+    isKeyDown = false;
+    isKeyUp = false;
+    key = '';
+
+    super.reset();
+  }
+}

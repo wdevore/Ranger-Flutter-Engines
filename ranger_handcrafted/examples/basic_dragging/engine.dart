@@ -12,6 +12,7 @@ class Engine extends core.EngineCore {
   final core.MouseEvent mouseEvent = core.MouseEvent();
   final core.MousePanEvent mousePanEvent = core.MousePanEvent();
   final core.MousePointerEvent mousePointerEvent = core.MousePointerEvent();
+  final core.KeyboardEvent keyboardEvent = core.KeyboardEvent();
 
   late core.DynamicTextNode fpsText;
   double _fpsCnt = 0.0;
@@ -168,8 +169,20 @@ class Engine extends core.EngineCore {
         ..position = event.localPosition
         ..delta = event.scrollDelta;
 
-      world.nodeManager.event(mousePointerEvent);
+      // world.nodeManager.event(mousePointerEvent);
     }
+  }
+
+  @override
+  void inputKeyEvent(KeyEvent event) {
+    keyboardEvent.reset();
+
+    keyboardEvent
+      ..isKeyDown = event is KeyDownEvent
+      ..isKeyUp = event is KeyUpEvent
+      ..key = event.logicalKey.keyLabel;
+
+    // world.nodeManager.event(keyboardEvent);
   }
 
   // --------------------------------------------------------------------------
@@ -179,6 +192,8 @@ class Engine extends core.EngineCore {
   /// Called by GamePainter.
   @override
   void update(double dt) {
+    world.nodeManager.event(keyboardEvent);
+
     world.nodeManager.update(dt, 0.0);
 
     if (_fpsCnt >= _fpsAverageMax) {

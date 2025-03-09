@@ -102,6 +102,11 @@ class MySquareNode extends core.Node {
           position.y += dragState.delta.y;
         }
         break;
+      case core.KeyboardEvent e:
+        if (e.isKeyDown) {
+          print('holding ${e.key}');
+        }
+        break;
       default:
         // throw UnimplementedError('$name: Unknown Event type');
         break;
