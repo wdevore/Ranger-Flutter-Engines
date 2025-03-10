@@ -27,7 +27,7 @@ class LayerBasicGame extends Node {
   }
 
   @override
-  void event(Event event) {
+  void event(Event event, double dt) {
     // TODO: implement event
   }
 

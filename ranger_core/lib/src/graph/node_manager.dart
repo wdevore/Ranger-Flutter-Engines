@@ -178,9 +178,9 @@ class NodeManager {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   /// Called from various engine inputs methods, for example, inputMouseMove().
-  void event(Event input) {
+  void event(Event input, double dt) {
     for (var target in eventTargets) {
-      target.event(input);
+      target.event(input, dt);
     }
   }
 

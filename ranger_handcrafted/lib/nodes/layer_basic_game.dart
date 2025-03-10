@@ -36,7 +36,7 @@ class LayerBasicGame extends core.Node {
   }
 
   @override
-  void event(core.Event event) {
+  void event(core.Event event, double dt) {
     // TODO: implement event
   }
 

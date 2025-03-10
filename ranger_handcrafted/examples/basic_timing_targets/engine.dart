@@ -53,7 +53,7 @@ class Engine extends core.EngineCore {
   void inputMouseMove(PointerHoverEvent event) {
     mouseEvent.position = event.position;
 
-    world.nodeManager.event(mouseEvent);
+    world.nodeManager.event(mouseEvent, 0.0);
 
     // print('mousemove: ${event.position} : ${event.delta}');
   }

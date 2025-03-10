@@ -30,7 +30,7 @@ class NodeBasicSplash extends Node {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   @override
-  void event(Event event) {
+  void event(Event event, double dt) {
     // TODO: implement event
   }
 

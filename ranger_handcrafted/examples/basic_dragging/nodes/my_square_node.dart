@@ -74,7 +74,7 @@ class MySquareNode extends core.Node {
   // Event targets (IO) (Only called if this Node registered itself)
   // --------------------------------------------------------------------------
   @override
-  void event(core.Event event) {
+  void event(core.Event event, double dt) {
     switch (event) {
       case core.MouseEvent e:
         shape.collision = _isMouseInNode(e.position);

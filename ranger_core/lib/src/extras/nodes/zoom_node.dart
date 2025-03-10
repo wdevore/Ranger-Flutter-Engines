@@ -136,7 +136,7 @@ class ZoomNode extends Node {
   // --------------------------------------------------------------------------
 
   @override
-  void event(Event event) {
+  void event(Event event, double dt) {
     switch (event) {
       case MouseEvent e:
         if (e.position != null) {

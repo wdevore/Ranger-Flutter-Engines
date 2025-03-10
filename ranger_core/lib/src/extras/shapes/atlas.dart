@@ -78,6 +78,18 @@ class Atlas {
     return rect;
   }
 
+  static Path createTrianglePath() {
+    Path path = Path();
+
+    path
+      ..moveTo(-0.5, 0.5)
+      ..lineTo(0.0, -0.5)
+      ..lineTo(0.5, 0.5)
+      ..close();
+
+    return path;
+  }
+
   void buildTextPath(String text, PathText pathText,
       {double charSpacing = 1.0}) {
     vectorText.buildPath(text, pathText, vectorFont, charSpacing: charSpacing);

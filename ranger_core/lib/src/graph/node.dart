@@ -208,7 +208,7 @@ abstract class Node with trxs.Transform, Group, Signals, Events {
   // --------------------------------------------------------------------------
   // Event targets (IO)
   // --------------------------------------------------------------------------
-  void event(Event input);
+  void event(Event input, double dt);
 
   // --------------------------------------------------------------------------
   // Timing targets (animations)

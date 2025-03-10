@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 
-class MySquareNode extends core.Node {
+class TriShipNode extends core.Node {
   late Paint paint = Paint();
-  late core.SquareShape shape;
+  late core.TriangleShape shape;
 
   late core.WorldCore world;
   late core.Renderer renderer;
 
   double angle = 0.0;
-  final double angleRate = 0.01; // radians per (1/framerate)
+  final double angleRate = 0.1; // radians per (1/framerate)
 
   final core.Point localPosition = core.Point.create();
 
-  MySquareNode();
+  TriShipNode();
 
   /// [parent] is of type Node not "Node?" because leaf nodes always have a
   /// parent.
-  factory MySquareNode.create(
+  factory TriShipNode.create(
     String name,
     double initialAngle,
     core.WorldCore world,
     core.Node? parent,
   ) {
-    MySquareNode my = MySquareNode()
+    TriShipNode my = TriShipNode()
       ..initialize(name)
       ..parent = parent
       ..nodeMan = world.nodeManager
@@ -39,23 +39,26 @@ class MySquareNode extends core.Node {
 
   void build(core.Atlas atlas) {
     // First create a shape that will be renderered.
-    Rect rect = core.Atlas.createSquareRect();
-    shape = core.SquareShape.create(rect, name);
+    Path path = core.Atlas.createTrianglePath();
+    shape = core.TriangleShape.create(path, name);
+    shape.paint = Paint()
+      ..color = Colors.lightBlueAccent
+      ..style = PaintingStyle.fill;
+
     // Add to Atlas for cache usage
     atlas.addShape(shape);
 
-    // Sync bounds to rectangle.
-    //
-    bounds
-      ..top = rect.top
-      ..left = rect.left
-      ..bottom = rect.bottom
-      ..right = rect.right
-      ..width = rect.width
-      ..height = rect.height;
+    // Sync bounds to path polygon.
+    // bounds
+    //   ..top = rect.top
+    //   ..left = rect.left
+    //   ..bottom = rect.bottom
+    //   ..right = rect.right
+    //   ..width = rect.width
+    //   ..height = rect.height;
 
     // Now create a renderer using that shape.
-    renderer = core.SquareRenderer.create(shape);
+    renderer = core.PathRenderer.create(shape);
 
     // We want input events from Mouse
     world.nodeManager.registerForEvents(this);
@@ -66,34 +69,36 @@ class MySquareNode extends core.Node {
   // --------------------------------------------------------------------------
   @override
   void receiveSignal(core.NodeSignal signal) {
-    print('MySquareNode.receiveSignal $signal');
+    print('TriShipNode.receiveSignal $signal');
   }
 
   // --------------------------------------------------------------------------
-  // Event targets (IO)
+  // Event targets (IO) (Only called if this Node registered itself)
   // --------------------------------------------------------------------------
   @override
   void event(core.Event event, double dt) {
     switch (event) {
-      case core.MouseEvent e:
-        // This gets the local-space coords of the rectangle node.
-        if (e.position != null) {
-          core.Spaces.mapDeviceToNode(
-            world,
-            e.position!.dx.toInt(),
-            e.position!.dy.toInt(),
-            this,
-            localPosition,
-          );
-          // print('local: $localPosition => $bounds');
-          // print('${e.position} => local: $localPosition');
+      case core.KeyboardEvent e:
+        if (e.isKeyDown) {
+          // print('holding ${e.key}');
+          switch (e.key) {
+            case 'Arrow Left':
+              angle -= angleRate * dt;
+              break;
+            case 'Arrow Right':
+              angle += angleRate * dt;
+              break;
+            case 'F': // Thrust
+              break;
 
-          shape.collision =
-              bounds.coordsInside(localPosition.x, localPosition.y);
+            default:
+              break;
+          }
         }
         break;
       default:
-        throw UnimplementedError('Unknown Event type');
+        // throw UnimplementedError('$name: Unknown Event type');
+        break;
     }
   }
 
@@ -107,12 +112,10 @@ class MySquareNode extends core.Node {
   @override
   void update(double dt) {
     switch (state) {
-      // case NodeState.waitSignal:
-      //   break;
       default:
         // Default is where most of the action takes place.
         setRotation(angle * core.degreesToRadians);
-        angle += angleRate * dt;
+        // angle += angleRate * dt;
         break;
     }
   }

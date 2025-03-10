@@ -45,7 +45,7 @@ class NodeBasicBoot extends Node {
 
   // Called by NodeManager
   @override
-  void event(Event event) {
+  void event(Event event, double dt) {
     // TODO: implement event
   }
 

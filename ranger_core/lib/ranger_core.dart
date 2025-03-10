@@ -16,10 +16,12 @@ export 'src/extras/nodes/zoom_node.dart' show ZoomNode;
 
 export 'src/extras/renderers/renderer.dart' show Renderer;
 export 'src/extras/renderers/square_renderer.dart' show SquareRenderer;
+export 'src/extras/renderers/path_renderer.dart' show PathRenderer;
 
 export 'src/extras/shapes/atlas.dart' show Atlas;
 export 'src/extras/shapes/shape.dart' show Shape;
 export 'src/extras/shapes/square_shape.dart' show SquareShape;
+export 'src/extras/shapes/triangle_shape.dart' show TriangleShape;
 
 export 'src/extras/misc/delay.dart' show Delay;
 export 'src/extras/misc/drag_state.dart' show DragState;

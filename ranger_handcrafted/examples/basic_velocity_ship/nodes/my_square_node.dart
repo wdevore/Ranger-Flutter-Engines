@@ -12,6 +12,7 @@ class MySquareNode extends core.Node {
   final double angleRate = 0.01; // radians per (1/framerate)
 
   final core.Point localPosition = core.Point.create();
+  final core.DragState dragState = core.DragState.create();
 
   MySquareNode();
 
@@ -70,31 +71,62 @@ class MySquareNode extends core.Node {
   }
 
   // --------------------------------------------------------------------------
-  // Event targets (IO)
+  // Event targets (IO) (Only called if this Node registered itself)
   // --------------------------------------------------------------------------
   @override
   void event(core.Event event, double dt) {
     switch (event) {
       case core.MouseEvent e:
-        // This gets the local-space coords of the rectangle node.
-        if (e.position != null) {
-          core.Spaces.mapDeviceToNode(
-            world,
-            e.position!.dx.toInt(),
-            e.position!.dy.toInt(),
-            this,
-            localPosition,
-          );
-          // print('local: $localPosition => $bounds');
-          // print('${e.position} => local: $localPosition');
+        shape.collision = _isMouseInNode(e.position);
+        break;
+      case core.MousePanEvent e:
+        if (e.isDragDown) {
+          shape.collision = _isMouseInNode(e.position);
+          if (shape.collision) {
+            dragState.setButtonUsing(
+              e.position!.dx.toInt(),
+              e.position!.dy.toInt(),
+              world,
+              core.EventState.buttonLeft,
+              core.EventState.down,
+              this,
+            );
+          }
+        }
 
-          shape.collision =
-              bounds.coordsInside(localPosition.x, localPosition.y);
+        if (e.isDragging && shape.collision) {
+          dragState.setMotionUsing(
+              e.position!.dx.toInt(), e.position!.dy.toInt(), world, this);
+
+          position.x += dragState.delta.x;
+          position.y += dragState.delta.y;
         }
         break;
+      case core.KeyboardEvent e:
+        if (e.isKeyDown) {}
+        break;
       default:
-        throw UnimplementedError('Unknown Event type');
+        // throw UnimplementedError('$name: Unknown Event type');
+        break;
     }
+  }
+
+  bool _isMouseInNode(Offset? position) {
+    if (position != null) {
+      // This gets the local-space coords of the rectangle node.
+      core.Spaces.mapDeviceToNode(
+        world,
+        position.dx.toInt(),
+        position.dy.toInt(),
+        this,
+        localPosition,
+      );
+      // print('local: $localPosition => $bounds');
+      // print('${e.position} => local: $localPosition');
+
+      return bounds.coordsInside(localPosition.x, localPosition.y);
+    }
+    return false;
   }
 
   @override

@@ -178,7 +178,7 @@ class Engine extends core.EngineCore {
     keyboardEvent.reset();
 
     keyboardEvent
-      ..isKeyDown = event is KeyDownEvent
+      ..isKeyDown = (event is KeyDownEvent) | (event is KeyRepeatEvent)
       ..isKeyUp = event is KeyUpEvent
       ..key = event.logicalKey.keyLabel;
 
@@ -192,7 +192,7 @@ class Engine extends core.EngineCore {
   /// Called by GamePainter.
   @override
   void update(double dt) {
-    world.nodeManager.event(keyboardEvent, 0.0);
+    world.nodeManager.event(keyboardEvent, dt);
 
     world.nodeManager.update(dt, 0.0);
 

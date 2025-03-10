@@ -43,7 +43,7 @@ class MySquareNode extends core.Node {
   // Event targets (IO)
   // --------------------------------------------------------------------------
   @override
-  void event(core.Event event) {
+  void event(core.Event event, double dt) {
     // TODO: implement event
   }
 

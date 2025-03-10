@@ -56,5 +56,5 @@ class StaticTextNode extends Node {
   }
 
   @override
-  void event(Event input) {}
+  void event(Event input, double dt) {}
 }

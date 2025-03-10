@@ -52,7 +52,7 @@ class DynamicTextNode extends Node {
   }
 
   @override
-  void event(Event input) {
+  void event(Event input, double dt) {
     // TODO: implement event
   }
 }
