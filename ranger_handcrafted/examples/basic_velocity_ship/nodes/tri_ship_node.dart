@@ -100,8 +100,6 @@ class KeyAction {
 
     return state;
   }
-
-  // void update() {}
 }
 
 class TriShipNode extends core.Node {

@@ -11,6 +11,11 @@ class GameApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // HardwareKeyboard.instance.addHandler((KeyEvent event) {
+    //   print('hard: $event');
+    //   return true;
+    // });
+
     return MaterialApp(
       title: 'Basic Dragging',
       debugShowCheckedModeBanner: false,
@@ -69,16 +74,8 @@ class _GamePageState extends State<_GamePage>
                   case '`':
                     SystemNavigator.pop();
                     break;
-                  // case 'K':
-                  //   engine.inputKeyEvent(event);
-                  //   break;
-                  // case 'O':
-                  //   break;
-
                   default:
-                    // print('focusnode: $event');
                     engine.inputKeyEvent(event);
-                  // return KeyEventResult.ignored;
                 }
 
                 return KeyEventResult.handled;
