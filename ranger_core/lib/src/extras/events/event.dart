@@ -49,12 +49,15 @@ class MousePointerEvent extends Event {}
 class KeyboardEvent extends Event {
   bool isKeyDown = false;
   bool isKeyUp = false;
+  bool isKeyRepeat = false;
+
   String key = '';
 
   @override
   void reset() {
     isKeyDown = false;
     isKeyUp = false;
+    isKeyRepeat = false;
     key = '';
 
     super.reset();

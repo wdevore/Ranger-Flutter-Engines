@@ -1,6 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:ranger_core/ranger_core.dart' as core;
 
+// The ship is initially pointed in the -Y direction.
+// So the initial angle--relative to +X--is 90 CCW. A positive rotation yields
+// a CCW rotation.
+// The velocity vector needs to be aligned/initialized relative to +X axis.
+
+class Thrust {
+  // This is the direction and magnitude of the thrust.
+  // When thrust is applied the magnitude is increases at a specified rate.
+  // When thrust is removed the magnitude decays to zero at a specified rate.
+  late core.Velocity velocity = core.Velocity.upDirection();
+  final double increaseRate = 0.001;
+  final double decreaseRate = 0.0005;
+  bool thrustOn = false;
+  double angularOffset = 0.0;
+
+  void applyThrust() {
+    thrustOn = true;
+  }
+
+  void removeThrust() {
+    thrustOn = false;
+  }
+
+  void setMaxThrust(double mag) {
+    velocity.maxMag = mag;
+  }
+
+  void update(double dt) {
+    if (thrustOn) {
+      velocity.magnitude += increaseRate * dt;
+      if (velocity.magnitude > velocity.maxMag) {
+        velocity.magnitude = velocity.maxMag;
+      }
+    } else {
+      velocity.magnitude -= decreaseRate * dt;
+      if (velocity.magnitude < 0.0) {
+        velocity.magnitude = 0.0;
+      }
+    }
+  }
+
+  void setDirectionOffset() {
+    setAngularOffset(-90.0 * core.degreesToRadians);
+  }
+
+  void setAngularOffset(double angle) {
+    angularOffset = angle;
+  }
+
+  void changeDirectionBy(double angle) {
+    velocity.setDirectionByAngle(angle + angularOffset);
+  }
+}
+
+enum KeyStates {
+  none,
+  up,
+  down,
+}
+
+// KeyRepeat causes KeyDown unassert. We need to check both Down and Up:
+//         d u r
+// KeyDown=T/F/F, KeyRepeat=F/F/T, KeyUp=F/T/F,    =F/F/F
+//   active           active        non-active    non-active
+// OR
+// KeyDown=T/F/F, KeyUp=F/T/F
+//
+// These are the sequences to detect a Down/Up sequence.
+// Because another key may be depressed while the current key is depressed,
+// we need to track all keys states.
+class KeyAction {
+  final String key;
+  KeyStates state = KeyStates.none;
+
+  KeyAction(this.key);
+
+  /// Return active (true) or not-active (false)
+  KeyStates check(core.KeyboardEvent event) {
+    if (event.key == key) {
+      if (event.isKeyDown && !event.isKeyUp && !event.isKeyRepeat) {
+        state = KeyStates.down;
+        return state;
+      }
+      if (!event.isKeyDown && !event.isKeyUp && event.isKeyRepeat) {
+        state = KeyStates.down;
+        return state;
+      }
+      if (!event.isKeyDown && event.isKeyUp && !event.isKeyRepeat) {
+        state = KeyStates.up;
+        return state;
+      }
+      if (!event.isKeyDown && !event.isKeyUp && !event.isKeyRepeat) {
+        state = KeyStates.none;
+        return state;
+      }
+    }
+
+    return state;
+  }
+
+  // void update() {}
+}
+
 class TriShipNode extends core.Node {
   late Paint paint = Paint();
   late core.TriangleShape shape;
@@ -9,9 +112,14 @@ class TriShipNode extends core.Node {
   late core.Renderer renderer;
 
   double angle = 0.0;
-  final double angleRate = 0.1; // radians per (1/framerate)
+  final double angularRate =
+      0.1 * core.degreesToRadians; // radians per (1/framerate)
 
-  final core.Point localPosition = core.Point.create();
+  final KeyAction fAction = KeyAction('F');
+  final KeyAction laAction = KeyAction('Arrow Left');
+  final KeyAction raAction = KeyAction('Arrow Right');
+
+  final Thrust thrust = Thrust();
 
   TriShipNode();
 
@@ -23,21 +131,25 @@ class TriShipNode extends core.Node {
     core.WorldCore world,
     core.Node? parent,
   ) {
-    TriShipNode my = TriShipNode()
+    TriShipNode ship = TriShipNode()
       ..initialize(name)
       ..parent = parent
       ..nodeMan = world.nodeManager
       ..world = world
-      ..angle = initialAngle
-      ..paint.color = Colors.white; // default of "white";
+      ..angle = initialAngle * core.degreesToRadians
+      ..paint.color = Colors.white // default of "white";
+      ..thrust.setMaxThrust(5.0)
+      ..thrust.setDirectionOffset();
 
-    my.parent?.children.addLast(my);
-    my.build(world.atlas);
+    ship.parent?.children.addLast(ship);
+    ship.build(world.atlas);
 
-    return my;
+    return ship;
   }
 
   void build(core.Atlas atlas) {
+    thrust.changeDirectionBy(angle);
+
     // First create a shape that will be renderered.
     Path path = core.Atlas.createTrianglePath();
     shape = core.TriangleShape.create(path, name);
@@ -77,28 +189,31 @@ class TriShipNode extends core.Node {
   // --------------------------------------------------------------------------
   @override
   void event(core.Event event, double dt) {
-    switch (event) {
-      case core.KeyboardEvent e:
-        if (e.isKeyDown) {
-          // print('holding ${e.key}');
-          switch (e.key) {
-            case 'Arrow Left':
-              angle -= angleRate * dt;
-              break;
-            case 'Arrow Right':
-              angle += angleRate * dt;
-              break;
-            case 'F': // Thrust
-              break;
-
-            default:
-              break;
-          }
+    if (event is core.KeyboardEvent) {
+      KeyStates actionState = fAction.check(event);
+      if (actionState != KeyStates.none) {
+        if (actionState == KeyStates.down) {
+          thrust.applyThrust();
+        } else if (actionState == KeyStates.up) {
+          thrust.removeThrust();
         }
-        break;
-      default:
-        // throw UnimplementedError('$name: Unknown Event type');
-        break;
+      }
+
+      actionState = laAction.check(event);
+      if (actionState != KeyStates.none) {
+        if (actionState == KeyStates.down) {
+          angle -= angularRate * dt;
+          thrust.changeDirectionBy(angle);
+        }
+      }
+
+      actionState = raAction.check(event);
+      if (actionState != KeyStates.none) {
+        if (actionState == KeyStates.down) {
+          angle += angularRate * dt;
+          thrust.changeDirectionBy(angle);
+        }
+      }
     }
   }
 
@@ -114,8 +229,12 @@ class TriShipNode extends core.Node {
     switch (state) {
       default:
         // Default is where most of the action takes place.
-        setRotation(angle * core.degreesToRadians);
-        // angle += angleRate * dt;
+        setRotation(angle);
+
+        // Apply thrust force to ship's position.
+        thrust.update(dt);
+        thrust.velocity.applyToPoint(position);
+
         break;
     }
   }

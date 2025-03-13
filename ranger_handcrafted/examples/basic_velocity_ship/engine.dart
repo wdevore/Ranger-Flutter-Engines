@@ -178,11 +178,15 @@ class Engine extends core.EngineCore {
     keyboardEvent.reset();
 
     keyboardEvent
-      ..isKeyDown = (event is KeyDownEvent) | (event is KeyRepeatEvent)
+      ..isKeyDown = (event is KeyDownEvent)
       ..isKeyUp = event is KeyUpEvent
+      ..isKeyRepeat = event is KeyRepeatEvent
       ..key = event.logicalKey.keyLabel;
 
-    // We don't call NodeManager's event method becaus it happens in the upate.
+    // print(
+    //     '${keyboardEvent.key}, ${keyboardEvent.isKeyDown}, ${keyboardEvent.isKeyUp}, ${keyboardEvent.isKeyRepeat}');
+
+    // We don't call NodeManager's event method because it happens in the upate.
   }
 
   // --------------------------------------------------------------------------

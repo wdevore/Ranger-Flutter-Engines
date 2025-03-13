@@ -14,9 +14,34 @@ class Velocity {
 
   Velocity();
 
-  factory Velocity.xDirection() {
+  /// Create a [rightDirection] heading in the *right* direction (+X)
+  factory Velocity.rightDirection() {
     Velocity v = Velocity()
       ..direction = Vector.create(1.0, 0.0)
+      ..limitMag = true;
+    return v;
+  }
+
+  /// Create a [leftDirection] heading in the *right* direction (+X)
+  factory Velocity.leftDirection() {
+    Velocity v = Velocity()
+      ..direction = Vector.create(-1.0, 0.0)
+      ..limitMag = true;
+    return v;
+  }
+
+  /// Create a [upDirection] heading in the *upward* direction (-Y)
+  factory Velocity.upDirection() {
+    Velocity v = Velocity()
+      ..direction = Vector.create(0.0, -1.0)
+      ..limitMag = true;
+    return v;
+  }
+
+  /// Create a [downDirection] heading in the *downward* direction (+Y)
+  factory Velocity.downDirection() {
+    Velocity v = Velocity()
+      ..direction = Vector.create(0.0, 1.0)
       ..limitMag = true;
     return v;
   }

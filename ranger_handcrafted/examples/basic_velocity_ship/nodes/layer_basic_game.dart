@@ -35,7 +35,7 @@ class LayerBasicGame extends core.Node {
       ..setPosition(300.0, 200.0)
       ..setScale(100.0);
 
-    shipNode = TriShipNode.create('Ship', 0.0, world, zoomNode)
+    shipNode = TriShipNode.create('Ship', 45.0, world, zoomNode)
       ..setPosition(400.0, 400.0)
       ..setScale(30.0);
   }
